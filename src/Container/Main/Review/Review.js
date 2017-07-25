@@ -16,13 +16,46 @@ import {
   Input,
 } from 'native-base';
 import { ImagePicker } from 'expo';
+import {get, set, clear} from '../../../Lib/storage';
+import * as firebase from 'firebase';
 
 const IMAGE_URL = 'https://pbs.twimg.com/profile_images/782474226020200448/zDo-gAo0_400x400.jpg';
 
 export default class Review extends Component {
-  state = {
-    image: null,
+  constructor(props){
+    super(props);
+    this.state = {
+      image: null,
+      user: null,
+    };
+    this.users = firebase.database().ref('users');
+  }
+
+  componentDidMount = () => {
+    get('USER_INFO')
+      .then(response => {
+        if (response) {
+          this.users.once('value')
+            .then(snapshot => {
+              if (snapshot.val()) {
+                const users = snapshot.val();
+                console.log(users);
+                for (const user in users) {
+                  if(user.id === response.id) {
+                    this.setState({
+                      user: users[user],
+                    });
+                  }
+                }
+                console.log('user state is', this.state.user);
+                console.log('user state name is', this.state.user.name);
+
+              }
+            })
+          }
+        });
   };
+
   handleTextInputChange = (text) => {
     //console.log(text);
     //Keyboard.dismiss();
@@ -40,13 +73,21 @@ export default class Review extends Component {
    }
  };
   render() {
-    let { image } = this.state;
+    let { image, user } = this.state;
+    if (!user){
+      return <Button>
+        <Text>
+          Loading
+        </Text>
+      </Button>;
+    }
+    console.log('user in renderer is', user);
     return (
       <View style={styles.container}>
         <Card>
           <CardItem>
             <Left>
-              <Thumbnail source={{uri: IMAGE_URL}} />
+              <Thumbnail source={{uri: user.picture.data.url}} />
               <Body>
                 <Text>Elon Musk</Text>
               </Body>

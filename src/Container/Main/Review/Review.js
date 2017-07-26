@@ -39,17 +39,15 @@ export default class Review extends Component {
             .then(snapshot => {
               if (snapshot.val()) {
                 const users = snapshot.val();
-                console.log(users);
-                for (const user in users) {
-                  if(user.id === response.id) {
-                    this.setState({
-                      user: users[user],
-                    });
+                let user = null;
+                for (const userItem in users) {
+                  if(userItem.id === response.id) {
+                    user = users[userItem];
                   }
                 }
-                console.log('user state is', this.state.user);
-                console.log('user state name is', this.state.user.name);
-
+                this.setState({
+                  user,
+                });
               }
             })
           }
@@ -81,7 +79,6 @@ export default class Review extends Component {
         </Text>
       </Button>;
     }
-    console.log('user in renderer is', user);
     return (
       <View style={styles.container}>
         <Card>
@@ -89,7 +86,7 @@ export default class Review extends Component {
             <Left>
               <Thumbnail source={{uri: user.picture.data.url}} />
               <Body>
-                <Text>Elon Musk</Text>
+                <Text>{user.name}</Text>
               </Body>
             </Left>
             <Right>
@@ -100,7 +97,7 @@ export default class Review extends Component {
             <Item style={styles.textBox}>
               <Input
                 style={styles.input}
-                placeholder='Want to review a book, Elon?'
+                placeholder={`Want to review a book, ${user.firstName}?`}
                 onChangeText={this.handleTextInputChange}
                 autoFocus={true}
               />

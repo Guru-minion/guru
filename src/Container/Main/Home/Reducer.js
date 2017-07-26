@@ -8,6 +8,13 @@ const initialState = {
     loading: false,
     data: [],
   },
+  comments: [
+    {
+      userId: '',
+      comment: '',
+      bookId: '',
+    },
+  ],
 };
 
 const home = (state = initialState, action ) => {
@@ -47,6 +54,8 @@ const home = (state = initialState, action ) => {
       }else {
         return state;
       }
+    case ADD_COMMENT:
+
     default:
       return state;
   }

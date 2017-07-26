@@ -12,23 +12,58 @@ import {
   Left,
   Body,
   List,
-  ListItem,
+  ListItem,Spinner,
 } from 'native-base';
+import {get, set, clear} from '../../../Lib/storage';
+import * as firebase from 'firebase';
 
 const IMAGE_URL='https://images-na.ssl-images-amazon.com/images/I/51eKKDBOXHL._SX305_BO1,204,203,200_.jpg';
 const AVATAR_URL = 'https://pbs.twimg.com/profile_images/782474226020200448/zDo-gAo0_400x400.jpg';
 
 export default class WishListView extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      user: null,
+    };
+    this.users = firebase.database().ref('users');
+  }
+  componentDidMount = () => {
+    get('USER_INFO')
+      .then(response => {
+        if (response) {
+          this.users.once('value')
+            .then(snapshot => {
+              if (snapshot.val()) {
+                const users = snapshot.val();
+                let user = null;
+                for (const userItem in users) {
+                  if(userItem.id === response.id) {
+                    user = users[userItem];
+                  }
+                }
+                this.setState({
+                  user,
+                });
+              }
+            })
+          }
+        });
+  };
   render() {
+    let { user } = this.state;
+    if (!user){
+      return <Spinner color='blue' />;
+    }
     return (
     <ScrollView>
       <Card style={{flex: 0}}>
          <CardItem>
            <Left>
-             <Thumbnail source={{uri: AVATAR_URL}} />
+             <Thumbnail source={{uri: user.picture.data.url}} />
              <Body>
               <View style={{flexDirection: 'row'}}>
-               <Text>Elon Musk</Text>
+               <Text>{user.name}</Text>
                <Text note> added this book</Text>
               </View>
                <Text note>July 23, 2017</Text>
@@ -56,10 +91,10 @@ export default class WishListView extends Component {
       <Card style={{flex: 0}}>
          <CardItem>
            <Left>
-             <Thumbnail source={{uri: AVATAR_URL}} />
+             <Thumbnail source={{uri:  user.picture.data.url}} />
              <Body>
                <View style={{flexDirection: 'row'}}>
-                <Text>Elon Musk</Text>
+                <Text>{user.name}</Text>
                 <Text note> added this book</Text>
                </View>
                <Text note>July 23, 2017</Text>
@@ -87,10 +122,10 @@ export default class WishListView extends Component {
       <Card style={{flex: 0}}>
          <CardItem>
            <Left>
-             <Thumbnail source={{uri: AVATAR_URL}} />
+             <Thumbnail source={{uri:  user.picture.data.url}} />
              <Body>
                <View style={{flexDirection: 'row'}}>
-                <Text>Elon Musk</Text>
+                <Text>{user.name}</Text>
                 <Text note> added this book</Text>
                </View>
                <Text note>July 23, 2017</Text>

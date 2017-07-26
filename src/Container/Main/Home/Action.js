@@ -1,6 +1,7 @@
 import {
   LOAD_LIST_DATA,
   RECEIVE_LIST_DATA,
+  ADD_COMMENT,
 } from '../../../Redux/ActionType';
 import firebase from '../../../Lib/firebase';
 
@@ -21,3 +22,8 @@ export const loadListBooks = (data) => (dispatch) => {
     data,
   }));
 };
+
+export const addComment = (comment) => ({
+  type: ADD_COMMENT,
+  comment,
+});

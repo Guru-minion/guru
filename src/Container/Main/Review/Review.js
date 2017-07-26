@@ -14,12 +14,11 @@ import {
   Right,
   Item,
   Input,
+  Spinner,
 } from 'native-base';
 import { ImagePicker } from 'expo';
 import {get, set, clear} from '../../../Lib/storage';
 import * as firebase from 'firebase';
-
-const IMAGE_URL = 'https://pbs.twimg.com/profile_images/782474226020200448/zDo-gAo0_400x400.jpg';
 
 export default class Review extends Component {
   constructor(props){
@@ -73,11 +72,7 @@ export default class Review extends Component {
   render() {
     let { image, user } = this.state;
     if (!user){
-      return <Button>
-        <Text>
-          Loading
-        </Text>
-      </Button>;
+      return <Spinner color='blue' />;
     }
     return (
       <View style={styles.container}>

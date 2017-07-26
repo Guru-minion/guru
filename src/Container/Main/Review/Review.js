@@ -16,13 +16,44 @@ import {
   Input,
 } from 'native-base';
 import { ImagePicker } from 'expo';
+import {get, set, clear} from '../../../Lib/storage';
+import * as firebase from 'firebase';
 
 const IMAGE_URL = 'https://pbs.twimg.com/profile_images/782474226020200448/zDo-gAo0_400x400.jpg';
 
 export default class Review extends Component {
-  state = {
-    image: null,
+  constructor(props){
+    super(props);
+    this.state = {
+      image: null,
+      user: null,
+    };
+    this.users = firebase.database().ref('users');
+  }
+
+  componentDidMount = () => {
+    get('USER_INFO')
+      .then(response => {
+        if (response) {
+          this.users.once('value')
+            .then(snapshot => {
+              if (snapshot.val()) {
+                const users = snapshot.val();
+                let user = null;
+                for (const userItem in users) {
+                  if(userItem.id === response.id) {
+                    user = users[userItem];
+                  }
+                }
+                this.setState({
+                  user,
+                });
+              }
+            })
+          }
+        });
   };
+
   handleTextInputChange = (text) => {
     //console.log(text);
     //Keyboard.dismiss();
@@ -40,15 +71,22 @@ export default class Review extends Component {
    }
  };
   render() {
-    let { image } = this.state;
+    let { image, user } = this.state;
+    if (!user){
+      return <Button>
+        <Text>
+          Loading
+        </Text>
+      </Button>;
+    }
     return (
       <View style={styles.container}>
         <Card>
           <CardItem>
             <Left>
-              <Thumbnail source={{uri: IMAGE_URL}} />
+              <Thumbnail source={{uri: user.picture.data.url}} />
               <Body>
-                <Text>Elon Musk</Text>
+                <Text>{user.name}</Text>
               </Body>
             </Left>
             <Right>
@@ -59,7 +97,7 @@ export default class Review extends Component {
             <Item style={styles.textBox}>
               <Input
                 style={styles.input}
-                placeholder='Want to review a book, Elon?'
+                placeholder={`Want to review a book, ${user.firstName}?`}
                 onChangeText={this.handleTextInputChange}
                 autoFocus={true}
               />

@@ -3,9 +3,10 @@ import {
   LOGIN_SUCCESS,
   UPDATE_USER_INFO,
 } from './ActionType';
+import firebase from '../../Lib/firebase';
 
-export const login = (data) => ({
-  type: LOGIN,
+export const loginSuccess = (data) => ({
+  type: LOGIN_SUCCESS,
   payload: data
 });
 
@@ -13,3 +14,11 @@ export const updateUserInfo = (data) => ({
   type: UPDATE_USER_INFO,
   payload: data
 });
+
+export const getUserInfo = (data) => (dispatch) => {
+  firebase.getUserInfo(data.id)
+    .then(snapshot => {
+      console.log('[xxxxx] info', snapshot.val());
+      dispatch(loginSuccess(snapshot.val()));
+    });
+};

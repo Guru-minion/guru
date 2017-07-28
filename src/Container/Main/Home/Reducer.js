@@ -1,55 +1,39 @@
 import {
-
+  LOAD_BOOK,
+  LOAD_BOOK_SUCCESS,
+  LOAD_BOOK_ERROR,
 } from './ActionType';
-import { LOAD_LIST_DATA, RECEIVE_LIST_DATA} from '../../../Redux/ActionType';
 
 const initialState = {
-  books : {
-    loading: false,
-    data: [],
-  },
+  loading: false,
+  data: [],
+  error: '',
 };
 
-const home = (state = initialState, action ) => {
-  const { type, payload } = action;
-  switch (type){
-    case LOAD_LIST_DATA:
-      if(payload === 'books'){
-        const _books = {
-          ...state.books,
-          loading: true,
-        };
-        return {
-          ...state,
-          books: _books,
-        }
-      }else {
-        return state;
-      }
-    case RECEIVE_LIST_DATA:
-      if(payload.key === 'books'){
-        let itemIds = [];
-        let _data = payload.data;
-        for (let id in _data) {
-          if (_data.hasOwnProperty(id)) {
-            itemIds.push(id);
-          }
-        }
-        const _books = {
-          ...state.books,
-          loading: false,
-          data: itemIds,
-        };
-        return {
-          ...state,
-          books: _books,
-        }
-      }else {
-        return state;
-      }
+const books = (state = initialState, action) => {
+  const {type, payload} = action;
+  switch (type) {
+    case LOAD_BOOK:
+      return {
+        ...state,
+        loading: true,
+      };
+    case LOAD_BOOK_SUCCESS:
+      let itemIds = payload.map(item => item.id);
+      return {
+        ...state.books,
+        loading: false,
+        data: itemIds,
+      };
+    case LOAD_BOOK_ERROR:
+      return {
+        ...state.books,
+        loading: false,
+        error: payload,
+      };
     default:
       return state;
   }
 };
 
-export default home;
+export default books;

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, StyleSheet, Image, Dimensions, Text } from 'react-native';
+import {View, StyleSheet, Image, Dimensions, Text} from 'react-native';
 import {
   Button,
   Content,
@@ -11,14 +11,10 @@ import {
   Spinner,
 } from 'native-base';
 import firebase from '../../Lib/firebase';
-// import * as firebase from 'firebase';
-
+import {set} from '../../Lib/storage';
+import {loginSuccess} from './Action';
 export default class LoginView extends Component {
-  static navigationOptions = {
-        header: null
-    }
-
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       email: '',
@@ -44,16 +40,24 @@ export default class LoginView extends Component {
       email: this.state.email,
       password: this.state.password,
     };
-    alert('user:'+ JSON.stringify(user))
-    this.setState({ loading : true});
+    this.setState({loading: true});
     firebase.signInWithEmailAndPassword(user)
+      .then(firebaseUser => {
+        const user = {
+          id: firebaseUser.uid,
+          name: firebaseUser.displayName,
+          email: firebaseUser.email,
+        };
+        this.props.navigation.dispatch(loginSuccess(user));
+        return set('USER_INFO', JSON.stringify(user));
+      })
       .then(response => {
-        this.setState({ loading : false});
+        this.setState({loading: false});
         console.log('[LoginView.js] login success', response);
         this.props.navigation.navigate('Main');
       })
       .catch(error => {
-        this.setState({ loading : false});
+        this.setState({loading: false});
         console.log('[LoginView.js] login error', error);
         alert(error.message);
       })
@@ -70,16 +74,16 @@ export default class LoginView extends Component {
         <Content contentContainerStyle={styles.formSignIn}>
           <Form >
             <Image
-            style={styles.logo}
-            resizeMode='stretch'
-            source={require('./logo.png')} />
+              style={styles.logo}
+              resizeMode='stretch'
+              source={require('./logo.png')}/>
             <Item>
               <Input
                 autoCorrect={false}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 onChangeText={this.handleUserNameChange}
-                placeholder="Email" />
+                placeholder="Email"/>
             </Item>
             <Item last>
               <Input
@@ -87,7 +91,7 @@ export default class LoginView extends Component {
                 secureTextEntry
                 autoCapitalize="none"
                 onChangeText={this.handlePasswordChange}
-                placeholder="Password" />
+                placeholder="Password"/>
             </Item>
             <Button
               block
@@ -95,7 +99,7 @@ export default class LoginView extends Component {
               onPress={this.handleSubmit}>
               {
                 this.state.loading ?
-                  (<Spinner size="small" color="#FFF" style={{ marginRight: 16}} />)
+                  (<Spinner size="small" color="#FFF" style={{marginRight: 16}}/>)
                   : null
               }
               <Text style={{color: 'white'}}>Sign In</Text>
@@ -129,8 +133,8 @@ const styles = {
     justifyContent: 'center',
   },
   logo: {
-    height: Dimensions.get('window').height/3,
-    width: Dimensions.get('window').width/1.5,
+    height: Dimensions.get('window').height / 3,
+    width: Dimensions.get('window').width / 1.5,
     marginTop: 10,
     marginBottom: 20,
   },

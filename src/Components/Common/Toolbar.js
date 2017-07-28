@@ -8,22 +8,31 @@ import {
   Right,
   Title,
 } from 'native-base';
-import { NavigationActions } from 'react-navigation';
+
 const NormalToolbar = (props) => {
-  const { navigation } = props;
-  const goBack = () => {
-    navigation.dispatch(NavigationActions.back())
-  }
-  return (
-    <Header>
-      <Left style={{flex: 0}}>
+  const { navigation, title, showBack } = props;
+
+  const renderBackButton = () => {
+    if(showBack){
+      return (
         <Button
-          onPress={goBack}
+          onPress={() => navigation.goBack()}
           transparent>
           <Icon name='arrow-back' />
         </Button>
+      )
+    }else {
+      return null;
+    }
+  };
+
+  return (
+    <Header>
+      <Left style={{flex: 0}}>
+        { renderBackButton() }
       </Left>
       <Body>
+        <Title>{title}</Title>
       </Body>
       <Right style={{flex: 0}}>
       </Right>

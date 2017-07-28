@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, TouchableHighlight, Image  } from 'react-native';
+import { Image  } from 'react-native';
 import {
   Container,
   View,
@@ -19,10 +19,35 @@ import {
 import StarRating from 'react-native-star-rating';
 
 const ReviewItem = (props) => {
-  const { item } = props;
+  const { item, userId, showReviewPopup } = props;
   const getBiggerImage = (url) => `${url}&zoom=7`;
+
+  const renderReviews = () => {
+    const reviews = item.reviews;
+    if(reviews.length > 0){
+      let reviewed = false;
+      console.log('[ReviewItem.js] renderReviews', reviews);
+      // let fitered = reviews.filter((review) => review.userId === userId);
+      // if(fitered.length > 0){
+      //   reviewed = true;
+      // }
+      return (
+        <Button transparent onPress={showReviewPopup}>
+          <Icon name="chatbubbles" style={{ color: `${reviewed ? 'red' : 'green'}` }} />
+          <Text>{` ${reviews.length} reviews`}</Text>
+        </Button>
+      )
+    }else {
+      return (
+        <Button transparent>
+          <Icon name="chatbubbles" style={{ color: 'red' }} />
+        </Button>
+      )
+    }
+  };
+
   return (
-    <Card style={{elevation: 3 }}>
+    <Card style={{ elevation: 3 }}>
       <CardItem cardBody>
         <Image
           style={{ height: 300, flex: 1 }}
@@ -32,7 +57,7 @@ const ReviewItem = (props) => {
         <H3>{item.title}</H3>
         <Text note>{item.authors[0]}</Text>
       </Body>
-      <CardItem style={{marginTop:40}}>
+      {/*<CardItem>
         <Left>
           <StarRating
             starSize={18}
@@ -42,11 +67,11 @@ const ReviewItem = (props) => {
             halfStar={'ios-star-half'}
             iconSet={'Ionicons'}
             maxStars={5}
-            rating={3.5}
+            rating={item.averageRating}
             selectedStar={(rating) => {}}
             starColor={'red'}
           />
-          <Text note>3.5</Text>
+          <Text note>{item.averageRating}</Text>
         </Left>
         <Item style={{borderBottomColor: 'transparent'}}>
           <Icon name="star" />
@@ -56,32 +81,49 @@ const ReviewItem = (props) => {
           <Icon name="chatbubbles" />
           <Text>13,000</Text>
         </Item>
+      </CardItem>*/}
+      <CardItem>
+        {/*<Body>*/}
+        <StarRating
+          starSize={18}
+          disabled={false}
+          emptyStar={'ios-star-outline'}
+          fullStar={'ios-star'}
+          halfStar={'ios-star-half'}
+          iconSet={'Ionicons'}
+          maxStars={5}
+          rating={item.averageRating}
+          selectedStar={(rating) => {}}
+          starColor={'red'}
+        />
+        <Text note>{item.averageRating}</Text>
+        {/*</Body>*/}
       </CardItem>
-      <Body style={styles.info}>
-      </Body>
+      {/*<Body style={styles.info}>
+        <H3>Rate it !</H3>
+        <StarRating
+          starSize={32}
+          disabled={false}
+          emptyStar={'ios-star-outline'}
+          fullStar={'ios-star'}
+          halfStar={'ios-star-half'}
+          iconSet={'Ionicons'}
+          maxStars={5}
+          rating={0}
+          selectedStar={(rating) => {}}
+          starColor={'red'}
+        />
+      </Body>*/}
       <CardItem style={styles.actionWrapper}>
-        <Button
-          transparent
-          onPress={props.swipeLeft}
-        >
-          <Icon name="close-circle" style={{ color: 'red' }} />
-        </Button>
-        <Button
-          transparent
-          onPress={props.swipeRight}
-        >
-          <Icon name="heart" style={{ color: 'red' }} />
-        </Button>
-        <Button
-          transparent
-          onPress={props.onCommentPress}
-        >
+        {/*<Button transparent>
           <Icon name="chatbubbles" style={{ color: 'red' }} />
-        </Button>
-        <Button
-          onPress={() => {props.setModalVisible(true)}}
-          transparent>
-          <Icon name="star" style={{ color: 'red' }} />
+        </Button>*/}
+        {
+          renderReviews()
+        }
+
+        <Button transparent>
+          <Icon name="heart" style={{ color: 'red' }} />
         </Button>
       </CardItem>
     </Card>
@@ -91,11 +133,10 @@ const ReviewItem = (props) => {
 
 const styles = {
   info: {
-    marginTop: 4,
+    marginTop: 16,
   },
   actionWrapper: {
     flexDirection: 'row',
-    marginTop: 30,
     justifyContent: 'space-between',
   }
 };

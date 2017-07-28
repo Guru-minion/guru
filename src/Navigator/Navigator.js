@@ -2,8 +2,12 @@ import React from 'react';
 import { Icon } from 'native-base';
 import {DrawerNavigator, StackNavigator, TabNavigator} from 'react-navigation';
 import Placeholder from '@components/Common/PlaceHolder';
+
+import HomeToolbar from '@components/Home/Toolbar';
 import NormalToolbar from '@components/Common/Toolbar';
 import ReviewToolbar from '@components/Common/ReviewBar';
+import NewReviewToolbar from '@components/Review/Toolbar';
+import BookToolbar from '@components/Book/Toolbar';
 import ProfileHeader from '@components/Common/ProfileHeader';
 
 //screen
@@ -11,14 +15,16 @@ import SplashView from '@container/Splash/SplashView';
 import IntroView from '@container/Intro/IntroView';
 import LoginView from '@container/Login/LoginView';
 import RegisterView from '@container/Register/RegisterView';
-import MainView from '@container/Main/MainView';
-import HomeView from '@container/Main/Home/HomeView';
-import CommentView from '@container/Main/Home/CommentView';
+import HomeScreen from '@container/Main/Home/HomeContainer';
 import FriendsView from '@container/Main/Friends/FriendsView';
 import WishListView from '@container/Main/Profile/WishListView';
 import Activities from '@container/Main/Profile/FollowingView';
 import Review from '@container/Main/Review/Review';
-import BarcodeScanner from '@container/Demo/BarcodeScanner';
+import DetailScreen from '@container/Detail/DetailContainer';
+import ReviewScreen from '@container/Review/ReviewContainer';
+
+//style
+import { AppColors } from '@style/index';
 
 const ReviewView = StackNavigator({
    Review: {
@@ -27,7 +33,7 @@ const ReviewView = StackNavigator({
        header: null,//ReviewToolbar,
      }
   }
-})
+});
 
 const ProfileStackNavigator = StackNavigator({
   Activities: {
@@ -44,34 +50,50 @@ const ProfileStackNavigator = StackNavigator({
   },
 });
 
-const HomeNav = StackNavigator({
-  Home: {
-    screen: HomeView,
-  },
-  CommentView: {
-    screen: CommentView,
-    navigationOptions: {
-      header: NormalToolbar,
-    }
-  },
+const HomeNavigator = StackNavigator({
+  HomeNavigator: {
+    screen: HomeScreen,
+    navigationOptions: ({navigation}) => ({
+      header: (<HomeToolbar title="Home"/>)
+    })
+  }
+});
+
+const BookNavigator = StackNavigator({
+  BookNavigator: {
+    screen: DetailScreen,
+    navigationOptions: ({navigation}) => ({
+      header: <BookToolbar navigation={navigation} />
+    })
+  }
+});
+
+const NewReviewNavigator = StackNavigator({
+  NewReviewNavigator: {
+    screen: ReviewScreen,
+    navigationOptions: ({navigation}) => ({
+      header: <NewReviewToolbar navigation={navigation} />
+    })
+  }
 });
 
 const MainNavigator = TabNavigator({
   Home: {
-    screen: HomeNav,
+    screen: HomeNavigator,
     navigationOptions: {
       title: 'Home',
+      showLabel: false,
       tabBarIcon: ({ tintColor }) => (
         <Icon name="home" style={{ color : '#FFF'}}
         />
-      ),
-      header: null,
+      )
     }
   },
   Friends: {
     screen: FriendsView,
     navigationOptions: {
       title: 'Friends',
+      showLabel: false,
       tabBarIcon: ({ tintColor }) => (
         <Icon name="people" style={{ color : '#FFF'}}
         />
@@ -107,14 +129,10 @@ const MainNavigator = TabNavigator({
   tabBarOptions: {
     activeTintColor: '#B48B41',
     inactiveTintColor: '#7D8388',
-    // showIcon: false,
     labelStyle: {
-      // flex: 1,
-      // fontSize: 16,
-      // marginTop: 12,
     },
     style: {
-      backgroundColor: '#262C36',
+      backgroundColor: AppColors.colorPrimary,
     },
   },
 });
@@ -122,7 +140,6 @@ const MainNavigator = TabNavigator({
 const AppNavigator = StackNavigator({
   Splash: {
     screen: SplashView,
-    header: null,
   },
   Intro: {
     screen: IntroView,
@@ -132,7 +149,6 @@ const AppNavigator = StackNavigator({
   },
   Login: {
     screen: LoginView,
-    header: null,
   },
   Register: {
     screen: RegisterView,
@@ -143,14 +159,14 @@ const AppNavigator = StackNavigator({
   Main: {
     screen: MainNavigator,
   },
-  Barcode: {
-    screen: BarcodeScanner,
-    navigationOptions: {
-      header: NormalToolbar,
-    }
+  Book: {
+    screen: BookNavigator,
+  },
+  NewReview: {
+    screen: NewReviewNavigator,
   },
 }, {
-  // headerMode: 'none',
+  headerMode: 'none',
   initialRouteName: 'Splash',
 });
 

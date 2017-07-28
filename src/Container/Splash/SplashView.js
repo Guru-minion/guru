@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Image, Dimensions, Text} from 'react-native';
+import { StyleSheet, Image, Dimensions } from 'react-native';
 import {
+  View,
+  Text,
   Button,
   Content,
   Form,
@@ -8,6 +10,9 @@ import {
   Input,
   Thumbnail, Container,
 } from 'native-base';
+import { NavigationActions } from 'react-navigation';
+import { loginSuccess, getUserInfo } from '../Login/Action';
+import {get, set, clear } from '../../Lib/storage';
 import {NavigationActions} from 'react-navigation';
 import firebase from '../../Lib/firebase';
 import {get, set} from '../../Lib/storage';
@@ -40,6 +45,22 @@ export default class SplashView extends Component {
       .catch(error => {
         console.log('[SplashView.js] check user error', error);
       })
+    //clear();
+    setTimeout(() => {
+      get('USER_INFO')
+        .then(response => {
+          console.log('[SplashView.js] check user', response);
+          if (response) {
+            this.props.navigation.dispatch(loginSuccess(JSON.parse(response)));
+            this.navigateTo('Main');
+          } else {
+            this.navigateTo('Login');
+          }
+        })
+        .catch(error => {
+          console.log('[SplashView.js] check user error', error);
+        })
+    }, 1200);
   };
 
   navigateTo = (routeName) => {
@@ -54,7 +75,11 @@ export default class SplashView extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>splash screen</Text>
+        <Text style={styles.title}>Guru</Text>
+        <Thumbnail
+          style={styles.logo}
+          source={require('../../Assets/Images/logo.png')}
+          />
       </View>
     );
   }
@@ -63,26 +88,17 @@ export default class SplashView extends Component {
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: '#ecf0f1',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 5,
-  },
-  formSignIn: {
     alignItems: 'center',
     justifyContent: 'center',
   },
   logo: {
-    height: Dimensions.get('window').height / 3,
-    width: Dimensions.get('window').width,
-    marginBottom: 20,
+    height: Dimensions.get('window').height / 2,
+    width: Dimensions.get('window').width - 32,
   },
-  text: {
-    fontSize: 16,
-    color: 'white',
-  },
-  button: {
-    marginTop: 20,
-    height: 30,
-  },
+  title: {
+    fontSize: 80,
+    fontFamily: 'HaydonBrush',
+    color: '#FF7456',
+    fontWeight: 'bold',
+  }
 };

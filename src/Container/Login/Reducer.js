@@ -1,15 +1,12 @@
 import {
-  UPDATE_USER_INFO,
+  LOGIN_SUCCESS,
 } from './ActionType';
 
-const initialState =  {
-  token : '',
-};
 
-const login = (state = initialState, action) => {
+const login = (state = {}, action) => {
   const { type, payload } = action;
   switch (type){
-    case UPDATE_USER_INFO:
+    case LOGIN_SUCCESS:
       return {
         state,
         ...payload,

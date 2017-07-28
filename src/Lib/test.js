@@ -45,3 +45,5 @@ activities = {
     review: 1,
   }
 };
+
+react-native/Libraries/Renderer/src/renderers/native/ReactNativePropRegistry

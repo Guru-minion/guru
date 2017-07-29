@@ -14,10 +14,10 @@ import {
   Textarea,
   Toast,
 } from 'native-base';
+import { AppColors } from '@style/index';
 import { NavigationActions } from 'react-navigation';
 import Starbar from '../../Components/Common/Starbar';
 import { reviewLoadingVisibility } from '../../Redux/UIs/Action';
-import firebase from '../../Lib/firebase';
 
 export default class Review extends Component {
 
@@ -29,12 +29,19 @@ export default class Review extends Component {
   }
 
   componentDidMount = () => {
-    const { user, navigation, initialReview } = this.props;
-    const bookId = navigation.state.params.id;
-    initialReview({
-      userId: user.id,
-      bookId,
-    })
+    const { user, navigation, initialReview, loadCurrentReview } = this.props;
+    const params = navigation.state.params;
+    if(params.reviewId){
+      loadCurrentReview(params.reviewId);
+    }else {
+      initialReview({
+        id: null,
+        userId: user.id,
+        bookId: params.bookId,
+        review: '',
+        rating: 0,
+      })
+    }
   };
 
   componentWillReceiveProps = (nextProps) => {
@@ -46,7 +53,6 @@ export default class Review extends Component {
   };
 
   _onChangeText = (text) => {
-    //this.setState({review: text});
     const { onReviewChange } = this.props;
     onReviewChange(text);
   };
@@ -61,13 +67,15 @@ export default class Review extends Component {
     const params = navigation.state.params;
 
     return (
-      <Content>
+      <Content style={{backgroundColor: '#FFF',}}>
         <CardItem padder style={{height: 72, flexDirection: 'row',}}>
           <Left style={{flexDirection: 'row'}}>
-            <Thumbnail source={{uri: 'https://pbs.twimg.com/profile_images/606153962501185536/paUxFpAn_bigger.jpg'}} />
+            <Thumbnail
+              defaultSource={require('../../Assets/Images/avatar_holder.png')}
+              source={{uri: user.avatar}} />
             <Body>
             <Text>{user.name ? user.name : 'Anonymous'}</Text>
-            <Text note>{`@${user.email}`}</Text>
+            <Text note>{user.email}</Text>
             </Body>
           </Left>
         </CardItem>
@@ -85,15 +93,16 @@ export default class Review extends Component {
 
         <CardItem style={{flexDirection: 'row'}}>
           <Text>Review to </Text>
-          <Text style={{color: '#138BF2'}}>{params.title}</Text>
+          <Text style={{color: AppColors.colorPrimary}}>{params.title}</Text>
         </CardItem>
 
         <CardItem>
             <Textarea
               value={review.review}
               style={{ flex: 1, paddingLeft: 0,}}
-              autoFocus
+              autoFocus={false}
               onChangeText={this._onChangeText}
+              returnKeyType="done"
               placeholder="Enter your review"
             />
         </CardItem>

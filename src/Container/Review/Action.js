@@ -32,6 +32,13 @@ export const addReview = () => (dispatch, getState) => {
   firebase.addReview(review)
     .then(() => {
       dispatch(reset());
-      //dispatch(reloadBook(true));
+    })
+};
+
+export const loadCurrentReview = (id) => (dispatch) => {
+  firebase.getReviewById(id)
+    .then(snapshot => {
+      const review = snapshot.val();
+      dispatch(initialReview(review));
     })
 };

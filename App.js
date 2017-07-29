@@ -4,12 +4,16 @@ import {Platform, BackHandler} from 'react-native';
 import {NavigationActions} from 'react-navigation';
 import NavigatorViewContainer from './src/Navigator/NavigatorViewContainer';
 import store from './src/Redux/Store';
+import firebase from './src/Lib/firebase';
 
 export default class App extends React.Component {
 
   state = {fontsAreLoaded: false};
 
   async componentWillMount() {
+
+    //firebase.initializeData();
+
     console.disableYellowBox = true;
     await Expo.Font.loadAsync({
       'Roboto': require('native-base/Fonts/Roboto.ttf'),

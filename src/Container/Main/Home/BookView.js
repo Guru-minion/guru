@@ -43,12 +43,16 @@ export default class BookView extends Component {
 
   };
 
-  _writeReview = (id, title) => {
-    this.props.navigation.navigate('NewReview', {}, {
+  _writeReview = () => {
+    const { id, title, navigation } = this.props;
+    const reviewed = this.reviewed();
+
+    navigation.navigate('NewReview', {}, {
       type: "Navigate",
       routeName: 'NewReviewNavigator',
       params: {
-        id,
+        reviewId: reviewed ? reviewed.id : null,
+        bookId: id,
         title,
       },
     });
@@ -76,21 +80,22 @@ export default class BookView extends Component {
 
   _getBiggerImage = () => `${this.props.imageLinks.thumbnail}&zoom=7`;
 
+  reviewed = () => {
+    const { reviews = [], userId } = this.props;
+    for(let i = 0; i < reviews.length; i++){
+      if(reviews[i].userId === userId){
+        return reviews[i];
+      }
+    }
+    return null;
+  };
+
   render() {
     console.log('[BookView.js] render', this.props);
     if(!this.props.id){
       return null;
     }
     const {id, userId, title, authors, averageRating = 0, reviews = [], wishlist = [] } = this.props;
-
-    const reviewed = () => {
-      for(let i = 0; i < reviews.length; i++){
-        if(reviews[i].userId === userId){
-          return true;
-        }
-      }
-      return false;
-    };
 
     const addedToWishlish = () => {
       for(let i = 0; i < wishlist.length; i++){
@@ -100,7 +105,6 @@ export default class BookView extends Component {
       }
       return false;
     };
-
 
     return (
       <Container>
@@ -114,6 +118,7 @@ export default class BookView extends Component {
               style={styles.photo}
             />
           </CardItem>
+
           <View style={styles.meta}>
             <View style={{flex: 3}}>
               <Text style={styles.title}>{title}</Text>
@@ -139,8 +144,8 @@ export default class BookView extends Component {
 
         <ButtonGroup
           liked={addedToWishlish()}
-          reviewed={reviewed()}
-          writeReview={() => this._writeReview(id, title)}
+          reviewed={this.reviewed()}
+          writeReview={() => this._writeReview()}
           addToWishlist={() => this._addToWishlist(id, addedToWishlish())}
         />
       </Container>

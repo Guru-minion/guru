@@ -38,11 +38,11 @@ const NewReviewToolbar = (props) => {
       </Body>
       <Right>
         <Right>
-          <Button style={{backgroundColor: AppColors.colorAccent}} onPress={submitReview} small rounded>
+          <Button style={{backgroundColor: AppColors.colorPrimary}} onPress={submitReview} small rounded>
             {
               loading ? (<Spinner size="small" color={AppColors.colorPrimary} />) : null
             }
-            <Text style={{marginLeft: 4 }}>Submit</Text>
+            <Text style={{marginLeft: 4}}>Submit</Text>
           </Button>
         </Right>
       </Right>

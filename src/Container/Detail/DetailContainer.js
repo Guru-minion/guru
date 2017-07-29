@@ -28,7 +28,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 
   return {
-    user: state.login,
+    user: state.user,
     loading: bookDetail.loading,
     error: bookDetail.error,
     book: bookInfo,

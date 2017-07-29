@@ -8,7 +8,7 @@ import {
 } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import AppIntro from 'react-native-app-intro';
-import { set } from '../../Lib/storage';
+import { get, set } from '../../Lib/storage';
 
 export default class IntroView extends Component {
 
@@ -43,8 +43,24 @@ export default class IntroView extends Component {
 
   _goToMain = () => {
     set('INTRO', 'seen')
-      .then(() => this._navigateTo('Main'))
-      .catch(() => this._navigateTo('Main'));
+      .then(() => this._checkUserSession())
+      .catch(() => this._checkUserSession());
+  };
+
+  _checkUserSession = () => {
+    get('USER_INFO')
+      .then(response => {
+        console.log('[SplashView.js] check user', response);
+        if (response) {
+          this._navigateTo('Main');
+        } else {
+          this._navigateTo('Login');
+        }
+      })
+      .catch(error => {
+        console.log('[SplashView.js] check user error', error);
+        this._navigateTo('Login');
+      })
   };
 
   render() {

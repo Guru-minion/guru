@@ -13,6 +13,7 @@ import {
   Thumbnail,
   View,
 } from 'native-base';
+import ExpanableTextView from '../Common/ExpanableTextView';
 import Starbar from '../Common/Starbar';
 //style
 import { AppColors } from '@style/index';
@@ -54,7 +55,12 @@ const BookInfo = (props) => {
 
       <View style={styles.line}/>
 
-      <Text note style={styles.description}>{description}</Text>
+      <ExpanableTextView
+        numberOfLines={4}
+        onReady={() => console.log('[Info.js] on ready')}>
+        <Text note style={styles.description}>{description}</Text>
+      </ExpanableTextView>
+
     </View>
   );
 };
@@ -101,7 +107,7 @@ const styles = {
   },
   description: {
     color: AppColors.colorPrimaryText,
-    fontSize: 14,
+    fontSize: 16,
   },
   line: {
     height: 1,

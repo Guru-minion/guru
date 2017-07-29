@@ -1,35 +1,43 @@
 import React, {Component} from 'react';
-import { View, StyleSheet, Image, Dimensions, Text } from 'react-native';
 import {
   Button,
   Content,
   Form,
   Item,
+  Icon,
   Input,
-  Thumbnail,Container,
+  Thumbnail,
+  Container,
+  Spinner,
+  Text,
+  View,
 } from 'native-base';
+import { Constants } from 'expo';
+import { AppColors, A } from '@style/index';
 import firebase from '../../Lib/firebase';
 
 export default class LoginView extends Component {
+
   constructor(props){
     super(props);
     this.state = {
       email: '',
       password: '',
+      name: '',
     };
   }
 
-  handleUserNameChange = (name) => {
-    this.setState({
-      email: name,
-    })
-  }
+  handleEmailChange = (email) => {
+    this.setState({ email })
+  };
 
-  handlePasswordChange = (pw) => {
-    this.setState({
-      password: pw,
-    })
-  }
+  handlePasswordChange = ( password ) => {
+    this.setState({ password })
+  };
+
+  handleNameChange = (name) => {
+    this.setState({ name })
+  };
 
   handleSubmit = () => {
     const user = {
@@ -47,7 +55,11 @@ export default class LoginView extends Component {
       })
   };
 
-  render() {
+  _handleBack = () => {
+    this.props.navigation.goBack();
+  };
+
+  /*render() {
     return (
       <View style={styles.container}>
         <Content contentContainerStyle={styles.formSignIn}>
@@ -61,7 +73,7 @@ export default class LoginView extends Component {
                 autoCorrect={false}
                 keyboardType="email-address"
                 autoCapitalize="none"
-                onChangeText={this.handleUserNameChange}
+                onChangeText={this.handleEmailChange}
                 placeholder="Email" />
             </Item>
             <Item last>
@@ -82,8 +94,133 @@ export default class LoginView extends Component {
         </Content>
       </View>
     );
+  }*/
+
+  render(){
+    return (
+      <Container style={styles.container}>
+        <Content contentContainerStyle={styles.content}>
+          <View style={styles.logoWrapper}>
+            <Thumbnail
+              style={styles.logo}
+              resizeMode='stretch'
+              source={require('../../Assets/Images/register_logo.png')}/>
+          </View>
+
+          <View style={styles.contentWrapper}>
+
+            <Item style={styles.inputWrapper}>
+              <Icon active style={styles.icon} name='mail' />
+              <Input
+                placeholder='Email'
+                autoCapitalize="none"
+                autoCorrect="false"
+                keyboardType="email-address"
+                returnKeyType="next"
+                onChangeText={this.handleEmailChange}
+              />
+            </Item>
+
+            <Item style={styles.inputWrapper}>
+              <Icon active style={styles.icon} name='lock' />
+              <Input
+                placeholder='Password'
+                autoCapitalize="none"
+                autoCorrect="false"
+                keyboardType="default"
+                returnKeyType="next"
+                secureTextEntry
+                onChangeText={this.handlePasswordChange}
+              />
+            </Item>
+
+            <Item style={styles.inputWrapper}>
+              <Icon active style={styles.icon} name='contact' />
+              <Input
+                placeholder='Name'
+                autoCapitalize="none"
+                autoCorrect="false"
+                keyboardType="default"
+                returnKeyType="done"
+                onChangeText={this.handleNameChange}
+              />
+            </Item>
+
+            <Button
+              rounded
+              style={styles.loginButton}
+              onPress={this.handleSubmit}
+            >
+              {
+                this.state.loading ?
+                  (<Spinner size="small" color="#FFF" style={{marginRight: 16}}/>)
+                  : null
+              }
+              <Text style={styles.loginText}>REGISTER</Text>
+            </Button>
+
+            {/*Dummy view*/}
+            <View style={{flex: 1}}/>
+
+
+            <Button transparent onPress={this._handleBack}>
+              <Text style={styles.register}>Already have an account? Login</Text>
+            </Button>
+          </View>
+        </Content>
+      </Container>
+    );
   }
 }
+
+const styles = {
+  container: {
+    flex: 1,
+    backgroundColor: '#FFF',
+    paddingTop: Constants.statusBarHeight,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 32,
+    paddingBottom: 16,
+  },
+  logoWrapper:{
+    flex: 2,
+    padding: 16,
+  },
+  logo: {
+    flex: 1,
+    height:  null,
+    width: null,
+  },
+  contentWrapper:{
+    flex: 3,
+    alignItems: 'center',
+  },
+  icon: {
+    color: AppColors.colorPrimary,
+  },
+  inputWrapper: {
+    marginTop: 16,
+  },
+  loginButton: {
+    backgroundColor: AppColors.colorPrimary,
+    marginTop: 32,
+    alignSelf: 'center',
+  },
+  loginText: {
+    color: '#FFF',
+    fontWeight: '600',
+    fontSize: 18,
+    paddingHorizontal: 48,
+  },
+  register: {
+    color: AppColors.colorPrimaryText,
+    fontSize: 16,
+  },
+};
+
+/*
 
 const styles = {
   container: {
@@ -111,3 +248,4 @@ const styles = {
     height: 30,
   },
 };
+*/

@@ -17,7 +17,7 @@ firebase.initializeData = () => {
     .then(snapshot => {
       if (!snapshot.val()) {
         console.log('INITIALIZE DATA FOR APPLICATION ');
-        return fetch('https://www.googleapis.com/books/v1/volumes?q=a&key=AIzaSyDxVtl-VS4lr22NprX_4VdQOQ5kqzUvq1U');
+        return fetch('https://www.googleapis.com/books/v1/volumes?q=a&key=AIzaSyDxVtl-VS4lr22NprX_4VdQOQ5kqzUvq1U&maxResults=40');
       } else {
         console.log('APPLICATION HAVING DATA FROM FIREBASE');
         return null;
@@ -59,6 +59,10 @@ firebase.getUserInfo = (id) => firebase.database().ref('users').child(id)
 
 firebase.getReviewById = (id) =>
   firebase.database().ref('reviews').child(id)
+    .once('value');
+
+firebase._getReviewById = (id) =>
+  firebase.database().ref('reviews').child(id)
     .once('value')
     .then(snapshot => {
       return Promise.resolve(snapshot.val());
@@ -69,7 +73,7 @@ firebase.getReviewsOfBook = (book) => {
   let promises = [];
 
   Object.keys(reviews).map(function (key) {
-    promises.push(firebase.getReviewById(reviews[key]));
+    promises.push(firebase._getReviewById(reviews[key]));
   });
 
   return Promise.all(promises);
@@ -108,29 +112,35 @@ firebase.getListBooks = () =>
   firebase.database().ref('books').once('value');
 
 firebase.addReview = (params) => {
-  const reviewRef = firebase.database().ref('reviews');
-  const key = reviewRef.push().key;
-  params.id = key;
-  reviewRef.child(key).set(params);
-  return firebase.database().ref('reviews').child(key)
-    .once('child_added')
-    .then(() => {
-      return firebase._getBookById(params.bookId);
-    })
-    .then(snapshot => {
-      const book = snapshot.val();
-      if (!book.reviews) {
-        book.reviews = [];
-      }
-      book.reviews.push({
-        id: key,
-        userId: params.userId
-      });
-      return firebase.database().ref('books').child(params.bookId).update(book);
-    })
-    .then(() => {
-      return Promise.resolve('success');
-    })
+  if(params.id){
+    return firebase.database().ref('reviews').child(params.id)
+      .update(params)
+      .then(() => Promise.resolve('success'))
+  }else {
+    const reviewRef = firebase.database().ref('reviews');
+    const key = reviewRef.push().key;
+    params.id = key;
+    reviewRef.child(key).set(params);
+    return firebase.database().ref('reviews').child(key)
+      .once('child_added')
+      .then(() => {
+        return firebase._getBookById(params.bookId);
+      })
+      .then(snapshot => {
+        const book = snapshot.val();
+        if (!book.reviews) {
+          book.reviews = [];
+        }
+        book.reviews.push({
+          id: key,
+          userId: params.userId
+        });
+        return firebase.database().ref('books').child(params.bookId).update(book);
+      })
+      .then(() => {
+        return Promise.resolve('success');
+      })
+  }
 };
 
 //add to wishlist

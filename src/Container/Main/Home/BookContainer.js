@@ -10,7 +10,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     ...book,
-    userId: state.login.id,
+    userId: state.user.id,
   }
 };
 

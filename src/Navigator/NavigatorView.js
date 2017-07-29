@@ -52,6 +52,22 @@ class NavigatorView extends Component {
       }));
     });
 
+    firebase.database().ref('reviews').on('child_changed', (snapshot) => {
+      const review = snapshot.val();
+      this.props.dispatch(updateItem({
+        key: 'reviews',
+        data: review,
+      }));
+    });
+
+    firebase.database().ref('reviews').on('child_added', (snapshot) => {
+      const review = snapshot.val();
+      this.props.dispatch(addItem({
+        key: 'reviews',
+        data: review,
+      }));
+    });
+
     //load all books
     firebase.database().ref('reviews').once('value', (snapshot) => {
       const reviews = snapshot.val();

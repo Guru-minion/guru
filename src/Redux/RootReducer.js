@@ -5,7 +5,7 @@ import entities from './Entities';
 import ui from './UIs/Reducer';
 import books from '../Container/Main/Home/Reducer';
 import book from '../Container/Detail/Reducer';
-import login from '../Container/Login/Reducer';
+import user from '../Container/Login/Reducer';
 import newReview from '../Container/Review/Reducer';
 
 // Combine all
@@ -13,7 +13,7 @@ const appReducer = combineReducers({
   nav: Nav,
   entities,
   books,
-  login,
+  user,
   book,
   newReview,
   ui,

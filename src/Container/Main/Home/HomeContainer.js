@@ -28,7 +28,7 @@ const mapStateToProps = state => {
     loading,
     error,
     books: data,
-    user: state.login,
+    user: state.user,
     reload: state.ui.reloadBook,
   };
 };

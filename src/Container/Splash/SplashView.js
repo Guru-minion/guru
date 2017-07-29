@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { StyleSheet, Image, Dimensions } from 'react-native';
+import { connect } from 'react-redux';
+import {Dimensions} from 'react-native';
 import {
   View,
   Text,
@@ -10,57 +11,78 @@ import {
   Input,
   Thumbnail, Container,
 } from 'native-base';
-import { NavigationActions } from 'react-navigation';
-import { loginSuccess, getUserInfo } from '../Login/Action';
-import {get, set, clear } from '../../Lib/storage';
 import {NavigationActions} from 'react-navigation';
+import {loginSuccess} from '../Login/Action';
+import {get, set, clear} from '../../Lib/storage';
 import firebase from '../../Lib/firebase';
-import {get, set} from '../../Lib/storage';
 
-export default class SplashView extends Component {
+class SplashView extends Component {
   constructor(props) {
     super(props);
   }
 
   componentDidMount = () => {
-    get('INTRO')
-      .then(savedInfo => {
-        if(savedInfo){
-          get('USER_INFO')
-            .then(response => {
-              console.log('[SplashView.js] check user', response);
-              if (response) {
-                this.navigateTo('Main');
-              } else {
-                this.navigateTo('Login');
-              }
-            })
-            .catch(error => {
-              console.log('[SplashView.js] check user error', error);
-            })
-        }else {
-          this.navigateTo('Intro');
-        }
-      })
-      .catch(error => {
-        console.log('[SplashView.js] check user error', error);
-      })
-    //clear();
+    /*clear()
+     .then(() => {
+     setTimeout(() => {
+     get('INTRO')
+     .then(savedInfo => {
+     if(savedInfo){
+     this.checkUserSession();
+     }else {
+     this.navigateTo('Intro');
+     }
+     })
+     .catch(error => {
+     console.log('[SplashView.js] check user error', error);
+     this.navigateTo('Login');
+     })
+     }, 1200);
+     });*/
+
     setTimeout(() => {
-      get('USER_INFO')
-        .then(response => {
-          console.log('[SplashView.js] check user', response);
-          if (response) {
-            this.props.navigation.dispatch(loginSuccess(JSON.parse(response)));
-            this.navigateTo('Main');
+      get('INTRO')
+        .then(savedInfo => {
+          if (savedInfo) {
+            this.checkUserSession();
           } else {
-            this.navigateTo('Login');
+            this.navigateTo('Intro');
           }
         })
         .catch(error => {
           console.log('[SplashView.js] check user error', error);
+          this.navigateTo('Login');
         })
-    }, 1200);
+    }, 0);
+  };
+
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.id && !this.props.id) {
+      this.navigateTo('Main');
+    }
+  };
+
+  checkUserSession = () => {
+    get('USER_INFO')
+      .then(response => {
+        console.log('[SplashView.js] get user info from storage', response);
+        const savedInfo = JSON.parse(response);
+        firebase.getUserInfo(savedInfo.id)
+          .then(snapshot => {
+            const user = snapshot.val();
+            console.log('[SplashView.js] user info', user);
+            this.props.dispatch(loginSuccess(user));
+          })
+          .catch(error => {
+            console.log('[SplashView.js] get user info from firebase error', error);
+            this.navigateTo('Login');
+          })
+
+      })
+      .catch(error => {
+        console.log('[SplashView.js] check user error', error);
+        this.navigateTo('Login');
+      })
   };
 
   navigateTo = (routeName) => {
@@ -79,11 +101,16 @@ export default class SplashView extends Component {
         <Thumbnail
           style={styles.logo}
           source={require('../../Assets/Images/logo.png')}
-          />
+        />
       </View>
     );
   }
 }
+
+// What data from the store shall we send to the component?
+const mapStateToProps = state => state.user;
+
+export default connect(mapStateToProps)(SplashView);
 
 const styles = {
   container: {

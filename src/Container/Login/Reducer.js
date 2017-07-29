@@ -3,7 +3,7 @@ import {
 } from './ActionType';
 
 
-const login = (state = {}, action) => {
+const user = (state = {}, action) => {
   const { type, payload } = action;
   switch (type){
     case LOGIN_SUCCESS:
@@ -15,4 +15,4 @@ const login = (state = {}, action) => {
   }
 };
 
-export default login;
+export default user;

@@ -16,24 +16,6 @@ import { AppColors } from '@style/index';
 const ButtonGroup = (props) => {
   const {liked, reviewed, writeReview, addToWishlist} = props;
 
-  // const reviewed = () => {
-  //   for(let i = 0; i < reviews.length; i++){
-  //     if(reviews[i].userId === userId){
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // };
-  //
-  // const addedToWishlish = () => {
-  //   for(let i = 0; i < wishlist.length; i++){
-  //     if(wishlist[i].userId === userId){
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // };
-
   const renderIcon = (color) => ({
     ...styles.icon,
     color,
@@ -55,7 +37,10 @@ const ButtonGroup = (props) => {
 
       <Button transparent onPress={writeReview}>
         <View style={styles.button}>
-          <Icon style={renderIcon(reviewed ? AppColors.colorPrimary : AppColors.colorPrimary)} name="chatbubbles"/>
+          <Icon
+            style={renderIcon(AppColors.colorPrimary)}
+            active={!!reviewed}
+            name="chatbubbles"/>
         </View>
       </Button>
 

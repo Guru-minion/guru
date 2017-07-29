@@ -6,6 +6,7 @@ import {
 } from './ActionType';
 
 const initialState = {
+  id: null,
   userId: null,
   bookId: null,
   review: '',
@@ -20,8 +21,7 @@ const newReview = (state = initialState, action) => {
     case INITIAL_REVIEW:
       return {
         ...state,
-        userId: payload.userId,
-        bookId: payload.bookId,
+        ...payload
       };
     case ON_REVIEW_CHANGE:
       return {

@@ -11,9 +11,9 @@ import BookToolbar from '@components/Book/Toolbar';
 import ProfileHeader from '@components/Common/ProfileHeader';
 
 //screen
-import SplashView from '@container/Splash/SplashView';
+import SplashScreen from '@container/Splash/SplashView';
 import IntroView from '@container/Intro/IntroView';
-import LoginView from '@container/Login/LoginView';
+import LoginScreen from '@container/Login/LoginContainer';
 import RegisterView from '@container/Register/RegisterView';
 import HomeScreen from '@container/Main/Home/HomeContainer';
 import FriendsView from '@container/Main/Friends/FriendsView';
@@ -54,7 +54,7 @@ const HomeNavigator = StackNavigator({
   HomeNavigator: {
     screen: HomeScreen,
     navigationOptions: ({navigation}) => ({
-      header: (<HomeToolbar title="Home"/>)
+      header: (<HomeToolbar navigation={navigation} title="Home"/>)
     })
   }
 });
@@ -139,7 +139,7 @@ const MainNavigator = TabNavigator({
 
 const AppNavigator = StackNavigator({
   Splash: {
-    screen: SplashView,
+    screen: SplashScreen,
   },
   Intro: {
     screen: IntroView,
@@ -148,7 +148,7 @@ const AppNavigator = StackNavigator({
     }
   },
   Login: {
-    screen: LoginView,
+    screen: LoginScreen,
   },
   Register: {
     screen: RegisterView,

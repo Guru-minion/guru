@@ -18,7 +18,6 @@ export const updateUserInfo = (data) => ({
 export const getUserInfo = (data) => (dispatch) => {
   firebase.getUserInfo(data.id)
     .then(snapshot => {
-      console.log('[xxxxx] info', snapshot.val());
       dispatch(loginSuccess(snapshot.val()));
     });
 };

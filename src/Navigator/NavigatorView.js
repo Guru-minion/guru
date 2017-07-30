@@ -1,5 +1,6 @@
 import React, {PropTypes, Component} from 'react';
 import { View, Platform } from 'react-native';
+import { Root } from 'native-base';
 import { Constants } from 'expo';
 import {addNavigationHelpers} from 'react-navigation';
 import firebase from '../Lib/firebase';
@@ -30,14 +31,17 @@ class NavigatorView extends Component {
 
     return (
       <View style={AppStyle}>
-        <AppNavigator
-          navigation={
-            addNavigationHelpers({
-              dispatch: this.props.dispatch,
-              state: this.props.navigatorState
-            })
-          }
-        />
+        <Root>
+
+          <AppNavigator
+            navigation={
+              addNavigationHelpers({
+                dispatch: this.props.dispatch,
+                state: this.props.navigatorState
+              })
+            }
+          />
+        </Root>
       </View>
     );
   }
@@ -60,6 +64,15 @@ class NavigatorView extends Component {
       }));
     });
 
+    firebase.database().ref('users').on('child_changed', (snapshot) => {
+      const user = snapshot.val();
+      this.props.dispatch(updateItem({
+        key: 'users',
+        data: user,
+      }));
+    });
+
+
     firebase.database().ref('reviews').on('child_added', (snapshot) => {
       const review = snapshot.val();
       this.props.dispatch(addItem({
@@ -68,7 +81,15 @@ class NavigatorView extends Component {
       }));
     });
 
-    //load all books
+    firebase.database().ref('wishlist').on('child_added', (snapshot) => {
+      const wishlist = snapshot.val();
+      this.props.dispatch(addItem({
+        key: 'wishlist',
+        data: wishlist,
+      }));
+    });
+
+    //load all reviews
     firebase.database().ref('reviews').once('value', (snapshot) => {
       const reviews = snapshot.val();
       if(!reviews) return;
@@ -87,6 +108,17 @@ class NavigatorView extends Component {
       this.props.dispatch(receiveListData({
         key: 'users',
         data: usersArray,
+      }))
+    });
+
+    //load all wishlist
+    firebase.database().ref('wishlist').once('value', (snapshot) => {
+      const wishlist = snapshot.val();
+      if(!wishlist) return;
+      const wishlistArray = Object.keys(wishlist).map(key => wishlist[key]);
+      this.props.dispatch(receiveListData({
+        key: 'wishlist',
+        data: wishlistArray,
       }))
     });
 

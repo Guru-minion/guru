@@ -50,6 +50,42 @@ firebase.register = ({email, password}) => {
     })
 };
 
+firebase.uploadImage = (base64, url) => {
+  const storageRef = firebase.storage().ref();
+  const metadata = {
+    contentType: 'image/jpeg',
+  };
+  const ext = url.substring(url.lastIndexOf('.'), url.length);
+  const fileName =uuidv4() + ext;
+  const ref = storageRef.child(fileName);
+  return ref.putString(base64, 'base64', metadata)
+    .then(function(snapshot) {
+    console.log('Uploaded a base64 string!', snapshot);
+        return Promise.resolve(snapshot.downloadURL);
+    });
+};
+
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+firebase.updateUserInfo = (id, info) => {
+  return firebase.database().ref('users').child(id)
+    .once('value')
+    .then(snapshot => {
+      let user = snapshot.val();
+      user = {
+        ...user,
+        ...info,
+      };
+      console.log('[xxxxx] ', user);
+      return firebase.database().ref('users').child(id).update(user);
+    })
+};
+
 firebase.signInWithEmailAndPassword = ({email, password}) => {
   return firebase.auth().signInWithEmailAndPassword(email, password)
 };
@@ -112,34 +148,68 @@ firebase.getListBooks = () =>
   firebase.database().ref('books').once('value');
 
 firebase.addReview = (params) => {
-  if(params.id){
+  if (params.id) {
     return firebase.database().ref('reviews').child(params.id)
       .update(params)
       .then(() => Promise.resolve('success'))
-  }else {
+  } else {
     const reviewRef = firebase.database().ref('reviews');
     const key = reviewRef.push().key;
+    const createdAt = new Date().getTime();
     params.id = key;
+    params.createdAt = createdAt;
     reviewRef.child(key).set(params);
     return firebase.database().ref('reviews').child(key)
       .once('child_added')
       .then(() => {
-        return firebase._getBookById(params.bookId);
-      })
-      .then(snapshot => {
-        const book = snapshot.val();
-        if (!book.reviews) {
-          book.reviews = [];
-        }
-        book.reviews.push({
-          id: key,
-          userId: params.userId
-        });
-        return firebase.database().ref('books').child(params.bookId).update(book);
-      })
-      .then(() => {
-        return Promise.resolve('success');
-      })
+        let promises = [];
+
+        promises.push(
+          firebase.database().ref('users').child(params.userId)
+            .once('value')
+            .then(snapshot => {
+              const user = snapshot.val();
+              //update reviews
+              if (!user.reviews) {
+                user.reviews = [];
+              }
+              user.reviews.push({
+                id: key,
+                bookId: params.bookId,
+              });
+              //update activities
+              if (!user.activities) {
+                user.activities = [];
+              }
+              user.activities.unshift({
+                id: key,
+                type: 'review',
+              });
+
+              return firebase.database().ref('users').child(params.userId)
+                .update(user);
+            })
+        );
+
+        promises.push(
+          firebase.database().ref('books').child(params.bookId)
+            .once('value')
+            .then(snapshot => {
+              const book = snapshot.val();
+              if (!book.reviews) {
+                book.reviews = [];
+              }
+              book.reviews.push({
+                id: key,
+                userId: params.userId,
+              });
+              return firebase.database().ref('books').child(params.bookId)
+                .update(book);
+            })
+        );
+
+        return Promise.all(promises);
+      });
   }
 };
 
@@ -147,7 +217,9 @@ firebase.addReview = (params) => {
 firebase.addToWishlist = (params) => {
   const wishlistRef = firebase.database().ref('wishlist');
   const key = wishlistRef.push().key;
+  const createdAt = new Date().getTime();
   params.id = key;
+  params.createdAt = createdAt;
   wishlistRef.child(key).set(params);
   return firebase.database().ref('wishlist').child(key)
     .once('child_added')
@@ -159,13 +231,23 @@ firebase.addToWishlist = (params) => {
           .once('value')
           .then(snapshot => {
             const user = snapshot.val();
-            if(!user.wishlist){
+            //update wishlish
+            if (!user.wishlist) {
               user.wishlist = [];
             }
             user.wishlist.push({
               id: key,
               bookId: params.bookId,
             });
+            //update activities
+            if (!user.activities) {
+              user.activities = [];
+            }
+            user.activities.unshift({
+              id: key,
+              type: 'wishlist',
+            });
+
             return firebase.database().ref('users').child(params.userId)
               .update(user);
           })
@@ -176,7 +258,7 @@ firebase.addToWishlist = (params) => {
           .once('value')
           .then(snapshot => {
             const book = snapshot.val();
-            if(!book.wishlist){
+            if (!book.wishlist) {
               book.wishlist = [];
             }
             book.wishlist.push({
@@ -191,24 +273,6 @@ firebase.addToWishlist = (params) => {
       return Promise.all(promises);
     });
 };
-
-// firebase.getListBooks = () => {
-//   const ref = firebase.database().ref('books');
-//   return ref.once('value')
-//     .then(snapshot => {
-//       let promises = [];
-//       const books = snapshot.val();
-//       let book;
-//       for (let id in books) {
-//         if (books.hasOwnProperty(id)) {
-//           book = books[id];
-//           promises.push(firebase.getReviewsOfBook(book));
-//           promises.push(Promise.resolve(book));
-//         }
-//       }
-//       return Promise.all(promises);
-//     });
-// };
 
 firebase.onReviewAdded = (cb) => {
   firebase.database().ref('reviews').on('child_added', cb);

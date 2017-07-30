@@ -4,11 +4,13 @@ import {DrawerNavigator, StackNavigator, TabNavigator} from 'react-navigation';
 import Placeholder from '@components/Common/PlaceHolder';
 
 import HomeToolbar from '@components/Home/Toolbar';
+import ProfileToolbar from '@components/Profile/Toolbar';
 import NormalToolbar from '@components/Common/Toolbar';
 import ReviewToolbar from '@components/Common/ReviewBar';
 import NewReviewToolbar from '@components/Review/Toolbar';
 import BookToolbar from '@components/Book/Toolbar';
 import ProfileHeader from '@components/Common/ProfileHeader';
+import UserProfileToolbar from '@components/Profile/UserToolbar';
 
 //screen
 import SplashScreen from '@container/Splash/SplashView';
@@ -16,6 +18,8 @@ import IntroView from '@container/Intro/IntroView';
 import LoginScreen from '@container/Login/LoginContainer';
 import RegisterView from '@container/Register/RegisterView';
 import HomeScreen from '@container/Main/Home/HomeContainer';
+import ProfileScreen from '@container/Main/Profile/ProfileContainer';
+import UserProfileScreen from '@container/UserProfile/UserProfileContainer';
 import FriendsView from '@container/Main/Friends/FriendsView';
 import WishListView from '@container/Main/Profile/WishListView';
 import Activities from '@container/Main/Profile/FollowingView';
@@ -55,6 +59,24 @@ const HomeNavigator = StackNavigator({
     screen: HomeScreen,
     navigationOptions: ({navigation}) => ({
       header: (<HomeToolbar navigation={navigation} title="Home"/>)
+    })
+  }
+});
+
+const ProfileNavigator = StackNavigator({
+  ProfileNavigator: {
+    screen: ProfileScreen,
+    navigationOptions: ({navigation}) => ({
+      header: (<ProfileToolbar navigation={navigation} title="Profile"/>)
+    })
+  }
+});
+
+const UserProfileNavigator = StackNavigator({
+  UserProfileNavigator: {
+    screen: UserProfileScreen,
+    navigationOptions: ({navigation}) => ({
+      header: (<UserProfileToolbar navigation={navigation} title="User Profile"/>)
     })
   }
 });
@@ -112,7 +134,7 @@ const MainNavigator = TabNavigator({
     }
   },
   Profile: {
-    screen: ProfileStackNavigator,
+    screen: ProfileNavigator,
     navigationOptions: {
       title: 'Profile',
       tabBarIcon: ({ tintColor }) => (
@@ -161,6 +183,9 @@ const AppNavigator = StackNavigator({
   },
   Book: {
     screen: BookNavigator,
+  },
+  UserProfile: {
+    screen: UserProfileNavigator,
   },
   NewReview: {
     screen: NewReviewNavigator,

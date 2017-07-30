@@ -7,7 +7,7 @@ import {
 import ReviewItem from './ReviewItem';
 
 const MyReview = (props) => {
-  const {review} = props;
+  const {review, goToProfile} = props;
   console.log('[MyReview.js] MyReview', review);
   return (
     <List>
@@ -15,7 +15,9 @@ const MyReview = (props) => {
         <Text>My Review</Text>
       </ListItem>
 
-      <ReviewItem  {...review} />
+      <ReviewItem
+        goToProfile={goToProfile}
+        {...review} />
     </List>
   );
 };

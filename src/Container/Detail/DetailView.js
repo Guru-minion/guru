@@ -34,6 +34,24 @@ export default class DetailView extends Component {
     }
   };
 
+  _goToProfile = (user) => {
+    const { navigation } = this.props;
+    if(this.props.user.id === user.id){
+      navigation.navigate('Profile')
+    }else {
+      navigation.navigate('UserProfile', {}, {
+        type: "Navigate",
+        routeName: 'UserProfileNavigator',
+        params: {
+          userId: user.id,
+          name: user.name,
+          email: user.email,
+        },
+      });
+    }
+
+  };
+
   renderReview = () => {
     const {loading, reviews, user} = this.props;
 
@@ -54,7 +72,9 @@ export default class DetailView extends Component {
             {
               reviews.map(review => {
                 if(review.userId !== user.id){
-                  return (<ReviewItem key={review.id} {...review} />)
+                  return (<ReviewItem key={review.id}
+                                      goToProfile={this._goToProfile}
+                                      {...review} />)
                 }else {
                   return null;
                 }
@@ -75,6 +95,7 @@ export default class DetailView extends Component {
       if(myReview && myReview.length > 0){
         return (
           <MyReview
+            goToProfile={this._goToProfile}
             review={myReview[0]}
           />
         );

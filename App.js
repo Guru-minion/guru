@@ -12,13 +12,14 @@ export default class App extends React.Component {
 
   async componentWillMount() {
 
-    //firebase.initializeData();
+    firebase.initializeData();
 
     console.disableYellowBox = true;
     await Expo.Font.loadAsync({
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
       'HaydonBrush': require('./src/Assets/fonts/HaydonBrush_PERSONAL_USE.ttf'),
+      'Arial': require('./src/Assets/fonts/Arial.ttf'),
     });
     this.setState({fontsAreLoaded: true});
   }

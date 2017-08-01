@@ -9,6 +9,7 @@ import {
   Title,
 } from 'native-base';
 import {NavigationActions} from 'react-navigation';
+import { AppColors } from '@style/index';
 import {clear} from '../../Lib/storage';
 
 const HomeToolbar = (props) => {
@@ -21,6 +22,10 @@ const HomeToolbar = (props) => {
       .catch(() => navigateTo('Login'))
   };
 
+  const goToSearch = () => {
+    navigation.navigate('Search');
+  };
+
   const navigateTo = (routeName) => {
     const actionToDispatch = NavigationActions.reset({
       index: 0,
@@ -30,13 +35,19 @@ const HomeToolbar = (props) => {
   };
 
   return (
-    <Header>
-      <Left style={{flex: 0}}>
+    <Header style={{backgroundColor: AppColors.colorPrimary}}>
+      <Left style={{flex: 1}}>
       </Left>
       <Body>
-      <Title>{title}</Title>
+      <Title style={{ color : '#FFF'}}>{title}</Title>
       </Body>
-      <Right style={{flex: 0}}>
+      <Right style={{flex: 1}}>
+        <Button
+          onPress={() => goToSearch()}
+          transparent>
+          <Icon name='search'/>
+        </Button>
+
         <Button
           onPress={() => logout()}
           transparent>

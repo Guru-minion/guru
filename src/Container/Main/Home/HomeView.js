@@ -47,13 +47,12 @@ export default class HomeView extends Component {
   };
 
   render() {
-    console.log('[HomeView.js] render');
     const {loading, books} = this.props;
     if (loading) {
       return (<Spinner color={AppColors.colorPrimary}/>);
     }
     return (
-      <Container>
+      <Container style={styles.container}>
         <SwipeCards
           cards={books ? books : []}
           renderCard={this._renderItem}
@@ -67,13 +66,6 @@ export default class HomeView extends Component {
 
 const styles = {
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 56,
-    backgroundColor: '#ecf0f1',
-  },
-  swipeCards: {
-    flex: 1,
+    backgroundColor: '#979797',
   },
 };

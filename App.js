@@ -1,10 +1,13 @@
 import React from 'react';
 import {Provider} from 'react-redux';
+import {StyleProvider} from 'native-base';
+import getTheme from './native-base-theme/components';
 import {Platform, BackHandler} from 'react-native';
 import {NavigationActions} from 'react-navigation';
 import NavigatorViewContainer from './src/Navigator/NavigatorViewContainer';
 import store from './src/Redux/Store';
 import firebase from './src/Lib/firebase';
+import commonColor from './native-base-theme/variables/commonColor';
 
 export default class App extends React.Component {
 
@@ -12,7 +15,7 @@ export default class App extends React.Component {
 
   async componentWillMount() {
 
-    firebase.initializeData();
+    // firebase.initializeData();
 
     console.disableYellowBox = true;
     await Expo.Font.loadAsync({
@@ -51,9 +54,11 @@ export default class App extends React.Component {
       return null;
     }
     return (
-      <Provider store={store}>
-        <NavigatorViewContainer />
-      </Provider>
+      <StyleProvider style={getTheme(commonColor)}>
+        <Provider store={store}>
+          <NavigatorViewContainer />
+        </Provider>
+      </StyleProvider>
     );
   }
 }

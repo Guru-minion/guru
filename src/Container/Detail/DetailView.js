@@ -6,11 +6,16 @@ import {
   List,
   Spinner,
   ListItem,
+  Item,
+  Body,
   Text,
+  Icon,
+  Button,
 } from 'native-base';
 import BookInfo from '../../Components/Book/Info';
 import ReviewItem from '../../Components/Book/ReviewItem';
 import MyReview from '../../Components/Book/MyReview';
+import RelatedBook from '../../Components/Book/RelatedBook';
 //style
 import { AppColors } from '@style/index';
 
@@ -57,17 +62,23 @@ export default class DetailView extends Component {
 
     if(!loading){
       if(reviews.length === 0){
-        //todo render no review
         return (
-          <View>
-            <Text>No review</Text>
-          </View>
-        )
+          <Item style={{ borderBottomColor: 'transparent'}}>
+            <Body>
+              <Icon name="sad" />
+              <Text style={styles.noReview}>No review yet.</Text>
+              <Button transparent style={{ alignSelf: 'center'}}>
+                <Text>Tap to write a review</Text>
+                <Icon name="chatbubbles" />
+              </Button>
+            </Body>
+          </Item>
+        );
       }else {
         return (
           <List style={{ marginTop: 16}}>
-            <ListItem itemHeader first>
-              <Text>Reviews</Text>
+            <ListItem itemHeader first style={styles.item}>
+              <Text style={{ fontWeight: 'bold'}}>Other reviews</Text>
             </ListItem>
             {
               reviews.map(review => {
@@ -100,8 +111,18 @@ export default class DetailView extends Component {
           />
         );
       }else {
-        //todo render ban chua review, hay~ review cho sach
-         return null;
+         return (
+           <Item style={{ borderBottomColor: 'transparent'}}>
+             <Body>
+             <Icon name="sad" />
+             <Text style={styles.noReview}>You haven't reviewed yet.</Text>
+             <Button transparent style={{ alignSelf: 'center'}}>
+               <Text>Tap to write a review</Text>
+               <Icon name="chatbubbles" />
+             </Button>
+             </Body>
+           </Item>
+         );
       }
     }
   };
@@ -113,8 +134,8 @@ export default class DetailView extends Component {
     }
 
     return (
-      <Container style={styles.container}>
-        <Content>
+      <Container>
+        <Content style={styles.container}>
           <BookInfo
             {...book}
           />
@@ -122,6 +143,10 @@ export default class DetailView extends Component {
           {
             this.renderYourReview()
           }
+
+          <RelatedBook
+            related={book.relateds}
+          />
 
           {
             this.renderReview()
@@ -135,6 +160,15 @@ export default class DetailView extends Component {
 
 const styles = {
   container: {
-    backgroundColor: '#FFF',
+    marginBottom: 40,
   },
+  noReview: {
+    color: AppColors.colorSecondaryText,
+  },
+  item: {
+    borderBottomColor: 'transparent',
+    borderTopWidth: 1,
+    borderTopColor: AppColors.divider,
+    paddingHorizontal: 16,
+  }
 };

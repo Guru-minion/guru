@@ -1,11 +1,13 @@
 import {
   ADD_NEW_REVIEW_LOADING,
   RELOAD_BOOK,
+  FOLLOW_USER,
 } from './Action';
 
 const initialState = {
   addNewReviewLoading: false,
   reloadBook: false,
+  followLoading: false,
 };
 
 const ui = (state = initialState, action ) => {
@@ -20,6 +22,11 @@ const ui = (state = initialState, action ) => {
       return {
         ...state,
         reloadBook: payload,
+      };
+    case FOLLOW_USER:
+      return {
+        ...state,
+        followLoading: payload,
       };
     default:
       return state;

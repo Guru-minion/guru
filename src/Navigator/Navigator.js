@@ -11,6 +11,7 @@ import NewReviewToolbar from '@components/Review/Toolbar';
 import BookToolbar from '@components/Book/Toolbar';
 import ProfileHeader from '@components/Common/ProfileHeader';
 import UserProfileToolbar from '@components/Profile/UserToolbar';
+import SearchToolbar from '@container/Search/ToolbarContainer';
 
 //screen
 import SplashScreen from '@container/Splash/SplashView';
@@ -26,6 +27,7 @@ import Activities from '@container/Main/Profile/FollowingView';
 import Review from '@container/Main/Review/Review';
 import DetailScreen from '@container/Detail/DetailContainer';
 import ReviewScreen from '@container/Review/ReviewContainer';
+import SearchScreen from '@container/Search/SearchContainer';
 
 //style
 import { AppColors } from '@style/index';
@@ -99,6 +101,15 @@ const NewReviewNavigator = StackNavigator({
   }
 });
 
+const SearchNavigator = StackNavigator({
+  SearchNavigator: {
+    screen: SearchScreen,
+    navigationOptions: ({navigation}) => ({
+      header: <SearchToolbar navigation={navigation} />
+    })
+  }
+});
+
 const MainNavigator = TabNavigator({
   Home: {
     screen: HomeNavigator,
@@ -149,6 +160,7 @@ const MainNavigator = TabNavigator({
   animationEnabled: false,
   lazy: true,
   tabBarOptions: {
+    showLabel: false,
     activeTintColor: '#B48B41',
     inactiveTintColor: '#7D8388',
     labelStyle: {
@@ -189,6 +201,9 @@ const AppNavigator = StackNavigator({
   },
   NewReview: {
     screen: NewReviewNavigator,
+  },
+  Search: {
+    screen: SearchNavigator,
   },
 }, {
   headerMode: 'none',

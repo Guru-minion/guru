@@ -91,11 +91,10 @@ export default class BookView extends Component {
   };
 
   render() {
-    console.log('[BookView.js] render', this.props);
     if(!this.props.id){
       return null;
     }
-    const {id, userId, title, authors, averageRating = 0, reviews = [], wishlist = [] } = this.props;
+    const {id, userId, title, authors, pageCount, averageRating = 0, reviews = [], wishlist = [] } = this.props;
 
     const addedToWishlish = () => {
       for(let i = 0; i < wishlist.length; i++){
@@ -107,7 +106,7 @@ export default class BookView extends Component {
     };
 
     return (
-      <Container>
+      <Container style={{backgroundColor: 'transparent',}}>
         <Card style={styles.card}>
           <CardItem
             onPress={() => this._onItemClick({id, title})}
@@ -125,7 +124,7 @@ export default class BookView extends Component {
               <Text style={styles.author}>{`by ${authors[0]}`}</Text>
               <Item style={styles.ratingWrapper}>
                 <Starbar size={20} rating={averageRating}/>
-                <Text>{` ${averageRating}k`}</Text>
+                <Text>{` ${pageCount} rating`}</Text>
               </Item>
             </View>
             <View style={{flex: 2}}>

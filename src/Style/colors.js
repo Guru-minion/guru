@@ -1,7 +1,7 @@
 const app = {
-  colorPrimary: '#693BBF',
+  colorPrimary: '#20B875',
   colorPrimaryDark: '#388E3C',
-  colorAccent: '#05C68F',
+  colorAccent: '#D73628',
   colorPrimaryText: '#262C36',
   colorSecondaryText: '#6B757D',
   divider: '#BDBDBD',

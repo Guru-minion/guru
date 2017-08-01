@@ -25,13 +25,13 @@ const ButtonGroup = (props) => {
     <Footer style={styles.footer}>
       <Button transparent>
         <View style={styles.button}>
-          <Icon style={styles.icon} name="close"/>
+          <Icon style={renderIcon(AppColors.colorPrimary)} name="close"/>
         </View>
       </Button>
 
       <Button transparent>
         <View style={styles.button}>
-          <Icon style={styles.icon} name="star"/>
+          <Icon style={renderIcon(AppColors.colorPrimary)} name="star"/>
         </View>
       </Button>
 
@@ -76,7 +76,6 @@ const styles = {
   },
   icon: {
     fontSize: 32,
-    //color: AppColors.colorPrimary,
   }
 
 };

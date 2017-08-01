@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import {parseString} from 'react-native-xml2js';
 import {get, set} from './storage';
 
 const config = {
@@ -20,17 +21,40 @@ firebase.initializeData = () => {
         return fetch('https://www.googleapis.com/books/v1/volumes?q=a&key=AIzaSyDxVtl-VS4lr22NprX_4VdQOQ5kqzUvq1U&maxResults=40');
       } else {
         console.log('APPLICATION HAVING DATA FROM FIREBASE');
-        return null;
+        throw new Error();
       }
     })
-    .then(response => response.json())
-    .then(books => {
-      books.items.map(item => {
-        const book = {
-          id: item.id,
-          ...item.volumeInfo,
-        };
-        ref.child(item.id).set(book);
+    .then(response => {
+      return response.json();
+    })
+    .then(bookResponse => {
+      const books = bookResponse.items;
+      let relatedUrl = 'https://www.googleapis.com/books/v1/volumes?&key=AIzaSyDxVtl-VS4lr22NprX_4VdQOQ5kqzUvq1U&maxResults=40';
+      books.map(item => {
+        const author = item.volumeInfo.authors[0];
+        fetch(`${relatedUrl}&q=${author}`)
+          .then(res => res.json())
+          .then(response => {
+            let book = {
+              id: item.id,
+              ...item.volumeInfo,
+            };
+            book.relateds = [];
+            const relatedItems = response.items;
+            if(relatedItems && relatedItems.length > 0){
+              relatedItems.map(item1 => {
+                book.relateds.push({
+                  id: item1.id,
+                  title: item1.volumeInfo.title,
+                  imageLinks: item1.volumeInfo.imageLinks ? item1.volumeInfo.imageLinks : [],
+                });
+
+                ref.child(item.id).set(book);
+              })
+            }else {
+              ref.child(item.id).set(book);
+            }
+          })
       });
 
     })
@@ -56,17 +80,17 @@ firebase.uploadImage = (base64, url) => {
     contentType: 'image/jpeg',
   };
   const ext = url.substring(url.lastIndexOf('.'), url.length);
-  const fileName =uuidv4() + ext;
+  const fileName = uuidv4() + ext;
   const ref = storageRef.child(fileName);
   return ref.putString(base64, 'base64', metadata)
-    .then(function(snapshot) {
-    console.log('Uploaded a base64 string!', snapshot);
-        return Promise.resolve(snapshot.downloadURL);
+    .then(function (snapshot) {
+      console.log('Uploaded a base64 string!', snapshot);
+      return Promise.resolve(snapshot.downloadURL);
     });
 };
 
 function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });
@@ -115,23 +139,6 @@ firebase.getReviewsOfBook = (book) => {
   return Promise.all(promises);
 };
 
-// firebase.getBookById = (id) => {
-//   let book;
-//   return firebase.database().ref('books')
-//     .child(id).once('value')
-//     .then(snapshot => {
-//       book = snapshot.val();
-//       if (book.reviews && book.reviews.length > 0) {
-//         return firebase.getReviewsOfBook(book);
-//       } else {
-//         return Promise.resolve([]);
-//       }
-//     })
-//     .then(reviews => {
-//       book.reviews = reviews;
-//       return Promise.resolve(book);
-//     })
-// };
 
 firebase._getBookById = (id) => {
   return firebase.database().ref('books')
@@ -272,6 +279,20 @@ firebase.addToWishlist = (params) => {
 
       return Promise.all(promises);
     });
+};
+
+//add friend
+firebase.follow = (currentUserId, userInfo) => {
+  return firebase.database().ref('users').child(currentUserId)
+    .once('value')
+    .then(snapshot => {
+      const currentUser = snapshot.val();
+      if(!currentUser.friends){
+        currentUser.friends = [];
+      }
+      currentUser.friends.push(userInfo);
+      return firebase.database().ref('users').child(currentUserId).update(currentUser);
+    })
 };
 
 firebase.onReviewAdded = (cb) => {

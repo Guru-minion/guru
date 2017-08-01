@@ -59,42 +59,6 @@ export default class LoginView extends Component {
     this.props.navigation.goBack();
   };
 
-  /*render() {
-    return (
-      <View style={styles.container}>
-        <Content contentContainerStyle={styles.formSignIn}>
-          <Form >
-            <Image
-            style={styles.logo}
-            resizeMode='stretch'
-            source={require('./2096.jpg')} />
-            <Item>
-              <Input
-                autoCorrect={false}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                onChangeText={this.handleEmailChange}
-                placeholder="Email" />
-            </Item>
-            <Item last>
-              <Input
-                autoCorrect={false}
-                secureTextEntry
-                autoCapitalize="none"
-                onChangeText={this.handlePasswordChange}
-                placeholder="Password" />
-            </Item>
-            <Button
-              block
-              style={styles.button}
-              onPress={this.handleSubmit}>
-              <Text style={styles.text}>Create</Text>
-            </Button>
-          </Form>
-        </Content>
-      </View>
-    );
-  }*/
 
   render(){
     return (
@@ -114,7 +78,7 @@ export default class LoginView extends Component {
               <Input
                 placeholder='Email'
                 autoCapitalize="none"
-                autoCorrect="false"
+                autoCorrect={false}
                 keyboardType="email-address"
                 returnKeyType="next"
                 onChangeText={this.handleEmailChange}
@@ -126,7 +90,7 @@ export default class LoginView extends Component {
               <Input
                 placeholder='Password'
                 autoCapitalize="none"
-                autoCorrect="false"
+                autoCorrect={false}
                 keyboardType="default"
                 returnKeyType="next"
                 secureTextEntry
@@ -139,7 +103,7 @@ export default class LoginView extends Component {
               <Input
                 placeholder='Name'
                 autoCapitalize="none"
-                autoCorrect="false"
+                autoCorrect={false}
                 keyboardType="default"
                 returnKeyType="done"
                 onChangeText={this.handleNameChange}

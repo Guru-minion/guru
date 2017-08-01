@@ -4,15 +4,15 @@ import {
   Header,
   List, ListItem, Text
 } from 'native-base';
+import { AppColors } from '@style/index';
 import ReviewItem from './ReviewItem';
 
 const MyReview = (props) => {
   const {review, goToProfile} = props;
-  console.log('[MyReview.js] MyReview', review);
   return (
     <List>
-      <ListItem itemHeader first>
-        <Text>My Review</Text>
+      <ListItem style={styles.item} itemHeader first>
+        <Text style={{ fontWeight: 'bold'}}>My Review</Text>
       </ListItem>
 
       <ReviewItem
@@ -23,18 +23,12 @@ const MyReview = (props) => {
 };
 
 const styles = {
-  container: {
-    alignSelf: 'flex-start',
-    marginTop: 16,
+  item: {
+    borderBottomColor: 'transparent',
+    borderTopWidth: 1,
+    borderTopColor: AppColors.divider,
+    paddingHorizontal: 16,
   },
-  avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-  },
-  review: {
-    marginTop: 8,
-  }
 };
 
 export default MyReview;

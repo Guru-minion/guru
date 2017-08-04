@@ -10,12 +10,13 @@ import ReviewItem from './ReviewItem';
 const MyReview = (props) => {
   const {review, goToProfile} = props;
   return (
-    <List>
+    <List style={styles.container}>
       <ListItem style={styles.item} itemHeader first>
-        <Text style={{ fontWeight: 'bold'}}>My Review</Text>
+        <Text style={styles.title}>My Review</Text>
       </ListItem>
 
       <ReviewItem
+        removeUnderline
         goToProfile={goToProfile}
         {...review} />
     </List>
@@ -23,11 +24,17 @@ const MyReview = (props) => {
 };
 
 const styles = {
+  container: {
+    marginTop: 16,
+  },
+  title: {
+    fontFamily: 'Roboto_medium',
+    color: AppColors.colorPrimaryText,
+  },
   item: {
     borderBottomColor: 'transparent',
     borderTopWidth: 1,
     borderTopColor: AppColors.divider,
-    paddingHorizontal: 16,
   },
 };
 

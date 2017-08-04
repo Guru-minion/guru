@@ -22,9 +22,7 @@ import ButtonGroup from './ButtonGroup';
 import { AppColors } from '@style/index';
 
 const {width, height} = Dimensions.get('window');
-
-const IMAGE_URL = 'https://www.fahasa.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/v/e/veembangnoinho.jpg';
-
+//TODO useless class
 const BookItem = (props) => {
   const {item, itemClick, writeReview, addToWishlist, userId} = props;
 
@@ -44,7 +42,7 @@ const BookItem = (props) => {
         </CardItem>
         <View style={styles.meta}>
           <View style={{flex: 3}}>
-            <Text style={styles.title}>{item.title}</Text>
+            <Text>{item.title}</Text>
             <Text style={styles.author}>{`by ${item.authors[0]}`}</Text>
             <Item style={styles.ratingWrapper}>
               <Starbar size={20} rating={item.averageRating}/>
@@ -85,6 +83,7 @@ const styles = {
     flex: 1,
     width: 200,//width - 48,
     height: 200,//350,
+    marginTop: 8,
   },
   info: {
     flex: 1,
@@ -98,8 +97,10 @@ const styles = {
   },
   title: {
     fontSize: 16,
-    color: AppColors.colorPrimaryText,
-    fontWeight: '800',
+    // color: AppColors.colorPrimaryText,
+    color: '#FF00FF',
+    //fontFamily: 'Roboto_medium',
+    //fontWeight: '800',
   },
   author: {
     fontSize: 12,

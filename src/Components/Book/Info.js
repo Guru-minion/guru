@@ -13,15 +13,14 @@ import {
   Thumbnail,
   View,
 } from 'native-base';
+import { MaterialIcons } from '@expo/vector-icons';
 import ExpanableTextView from '../Common/ExpanableTextView';
 import Starbar from '../Common/Starbar';
 //style
 import { AppColors } from '@style/index';
 
-const IMAGE_URL = 'https://www.fahasa.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/v/e/veembangnoinho.jpg';
-
 const BookInfo = (props) => {
-  const { title, description, authors, categories = [], imageLinks, averageRating, publisher, publishedDate} = props;
+  const { isLiked, description, authors, categories = [], imageLinks, averageRating, publisher, publishedDate} = props;
 
   const getBiggerImage = () => `${imageLinks.thumbnail}&zoom=7`;
 
@@ -37,29 +36,56 @@ const BookInfo = (props) => {
           <Text style={styles.author}>{`by ${authors[0]}`}</Text>
           <View style={styles.voteWrapper}>
             <Starbar size={20} rating={averageRating} />
-            <Text> 23k</Text>
+            <Text></Text>
           </View>
           <Text note style={styles.category}>{categories.join(', ')}</Text>
           <Text note style={styles.publisher}>{`${publisher} (${publishedDate})`}</Text>
-          <View style={styles.action}>
-            <Button transparent small>
-              <Icon name="heart" />
+
+          <View style={{ flexDirection: 'row', flex: 1 }}>
+
+            <Button style={{ alignSelf: 'flex-end'}} small rounded>
+              <Text>Buy now</Text>
             </Button>
 
-            <Button transparent small>
-              <Icon name="add" />
-            </Button>
+            <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignSelf: 'flex-end'}}>
+              <Button transparent small>
+                <Icon active={isLiked} style={{ color : isLiked ? AppColors.colorAccent : AppColors.colorPrimary}} size={24} name="heart" />
+              </Button>
+
+              <Button transparent small>
+                <Icon size={24} name="chatbubbles" />
+              </Button>
+            </View>
           </View>
+
+          <View>
+
+          </View>
+
+          {/*<View style={{flex: 1, flexDirection: 'column',
+            justifyContent: 'flex-end'}}>
+            <View style={styles.action}>
+              <Button small rounded>
+                <Text>See on Amazon</Text>
+              </Button>
+
+              <Button transparent small>
+                <Icon name="heart" />
+              </Button>
+            </View>
+          </View>*/}
         </View>
       </Item>
 
       <View style={styles.line}/>
 
-      <ExpanableTextView
-        numberOfLines={4}
-        onReady={() => console.log('[Info.js] on ready')}>
-        <Text note style={styles.description}>{description}</Text>
-      </ExpanableTextView>
+      <View style={{ paddingHorizontal: 16}}>
+        <ExpanableTextView
+          numberOfLines={4}
+          onReady={() => console.log('[Info.js] on ready')}>
+          <Text note style={styles.description}>{description}</Text>
+        </ExpanableTextView>
+      </View>
 
     </View>
   );
@@ -67,11 +93,13 @@ const BookInfo = (props) => {
 
 const styles = {
   container: {
-    padding: 16,
+    flex: 1,
   },
   info: {
     height: 200,
     borderBottomColor: 'transparent',
+    paddingHorizontal:16,
+    marginTop: 16,
   },
   cover: {
     width: 120,
@@ -85,11 +113,11 @@ const styles = {
   },
   author: {
     color: AppColors.colorPrimaryText,
-    fontWeight: '600',
+    fontFamily: 'Roboto_medium',
   },
   category: {
     color: AppColors.colorSecondaryText,
-    marginTop: 16,
+    marginTop: 8,
   },
   publisher: {
     color: AppColors.colorSecondaryText,
@@ -101,12 +129,9 @@ const styles = {
     alignItems: 'center',
   },
   action: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
   },
   description: {
-    color: AppColors.colorPrimaryText,
+    color: AppColors.colorSecondaryText,
     fontSize: 16,
   },
   line: {

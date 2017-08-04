@@ -6,6 +6,7 @@ import {
 } from 'native-base';
 import SwipeCards from 'react-native-swipe-cards';
 import BookItem from './BookContainer';
+import Loading from '../../../Components/Common/Loading';
 //style
 import { AppColors } from '@style/index';
 
@@ -49,7 +50,7 @@ export default class HomeView extends Component {
   render() {
     const {loading, books} = this.props;
     if (loading) {
-      return (<Spinner color={AppColors.colorPrimary}/>);
+      return (<Loading />);
     }
     return (
       <Container style={styles.container}>

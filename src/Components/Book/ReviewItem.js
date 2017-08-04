@@ -12,23 +12,36 @@ const IMAGE_URL = 'https://www.fahasa1.com/media/catalog/product/cache/1/image/9
 
 const ReviewItem = (props) => {
 
-  const {review, rating, createdAt, user, goToProfile} = props;
+  const {review, rating, createdAt, user, goToProfile, removeUnderline} = props;
+
+  const styleUnderline = () => {
+    if(removeUnderline){
+      return {
+        borderBottomColor: 'transparent',
+        alignItems: 'flex-start',
+      }
+    }else {
+      return {
+        alignItems: 'flex-start',
+      }
+    }
+  };
 
   return (
-    <ListItem avatar >
+    <ListItem avatar style={{ borderBottomColor: 'red'}}>
       <Left style={styles.container}>
         <Thumbnail
           style={styles.avatar}
           defaultSource={require('../../Assets/Images/avatar_holder.png')}
           source={{uri: user.avatar}}/>
       </Left>
-      <Body style={{ alignItems : 'flex-start'}}>
+      <Body style={styleUnderline()}>
         <Text onPress={() => goToProfile(user)}>{user.name}</Text>
         <Starbar style={{ marginTop: 4}} rating={rating} size={16} />
         <Text numberOfLines={3} note style={styles.review}>{review}</Text>
       </Body>
-      <Right>
-      <Text note>{createAt(createdAt)}</Text>
+      <Right style={{ borderBottomColor: 'transparent'}}>
+        <Text note>{createAt(createdAt)}</Text>
       </Right>
     </ListItem>
   );

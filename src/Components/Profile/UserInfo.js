@@ -13,7 +13,7 @@ import {
 import {AppColors} from '@style/index';
 
 const UserInfo = (props) => {
-  const {email, name = 'Khac Vy', avatar, address = 'HCM', changeAvatar} = props;
+  const {email, name = 'Khac Vy', avatar, address = 'HCM', url, changeAvatar} = props;
 
   return (
     <View style={styles.container}>

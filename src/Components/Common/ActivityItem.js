@@ -18,8 +18,6 @@ import {
 import {AppColors} from '@style/index';
 import Starbar from './Starbar';
 
-const IMAGE_URL = 'https://www.fahasa.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/v/e/veembangnoinho.jpg';
-
 const Activity = (props) => {
 
   const {type, rating, book, user} = props;

@@ -52,14 +52,20 @@ export default class ProfileView extends Component {
     });
 
     if (!result.cancelled) {
-     firebase.uploadImage(result.base64, result.uri)
-       .then(url => {
-         console.log('[ProfileView.js] xxx1', url);
-         return firebase.updateUserInfo(user.id, { avatar: url});
-       })
-       .then(response => {
-         console.log('[ProfileView.js] xxxx final', response);
-       })
+      //this.setState({url : `data:image/jpg;base64,${result.base64}`});
+      const url = `data:image/jpg;base64,${result.base64}`;
+      firebase.updateUserInfo(user.id, { avatar : url})
+        .then(response => {
+          console.log('[ProfileView.js] xxx final', response);
+        });
+     // firebase.uploadImage(result.base64, result.uri)
+     //   .then(url => {
+     //     console.log('[ProfileView.js] xxx1', url);
+     //     return firebase.updateUserInfo(user.id, { avatar: url});
+     //   })
+     //   .then(response => {
+     //     console.log('[ProfileView.js] xxxx final', response);
+     //   })
     }
   };
 

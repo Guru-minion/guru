@@ -21,7 +21,7 @@ import RegisterView from '@container/Register/RegisterView';
 import HomeScreen from '@container/Main/Home/HomeContainer';
 import ProfileScreen from '@container/Main/Profile/ProfileContainer';
 import UserProfileScreen from '@container/UserProfile/UserProfileContainer';
-import FriendsView from '@container/Main/Friends/FriendsView';
+import FriendActivitiesScreen from '@container/Main/Friends/FriendContainer';
 import WishListView from '@container/Main/Profile/WishListView';
 import Activities from '@container/Main/Profile/FollowingView';
 import Review from '@container/Main/Review/Review';
@@ -59,6 +59,15 @@ const ProfileStackNavigator = StackNavigator({
 const HomeNavigator = StackNavigator({
   HomeNavigator: {
     screen: HomeScreen,
+    navigationOptions: ({navigation}) => ({
+      header: (<HomeToolbar navigation={navigation} title="Home"/>)
+    })
+  }
+});
+
+const FriendNavigator = StackNavigator({
+  HomeNavigator: {
+    screen: FriendActivitiesScreen,
     navigationOptions: ({navigation}) => ({
       header: (<HomeToolbar navigation={navigation} title="Home"/>)
     })
@@ -114,8 +123,6 @@ const MainNavigator = TabNavigator({
   Home: {
     screen: HomeNavigator,
     navigationOptions: {
-      title: 'Home',
-      showLabel: false,
       tabBarIcon: ({ tintColor }) => (
         <Icon name="home" style={{ color : '#FFF'}}
         />
@@ -123,10 +130,8 @@ const MainNavigator = TabNavigator({
     }
   },
   Friends: {
-    screen: FriendsView,
+    screen: FriendNavigator,
     navigationOptions: {
-      title: 'Friends',
-      showLabel: false,
       tabBarIcon: ({ tintColor }) => (
         <Icon name="people" style={{ color : '#FFF'}}
         />

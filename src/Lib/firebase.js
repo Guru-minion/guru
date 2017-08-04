@@ -75,6 +75,7 @@ firebase.register = ({email, password}) => {
 };
 
 firebase.uploadImage = (base64, url) => {
+  console.log('[firebase.js] uploadImage', base64);
   const storageRef = firebase.storage().ref();
   const metadata = {
     contentType: 'image/jpeg',

@@ -15,7 +15,7 @@ export default class App extends React.Component {
 
   async componentWillMount() {
 
-    // firebase.initializeData();
+    //firebase.initializeData();
 
     console.disableYellowBox = true;
     await Expo.Font.loadAsync({

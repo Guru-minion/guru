@@ -112,22 +112,38 @@ export default class DetailView extends Component {
         );
       }else {
          return (
-           <Item style={{ borderBottomColor: 'transparent'}}>
+           <View>
+             <View style={styles.line}/>
+             <Item style={{borderBottomColor: 'transparent'}}>
              <Body>
-             <Icon name="sad" />
              <Text style={styles.noReview}>You haven't reviewed yet.</Text>
-             <Button transparent style={{ alignSelf: 'center'}}>
-               <Text>Tap to write a review</Text>
+             <Icon name="sad" />
+             <Button transparent style={{ alignSelf: 'center', padding: 0, margin: 0,}}>
+               <Text style={styles.noReview}>Tap to write a review</Text>
                <Icon name="chatbubbles" />
              </Button>
              </Body>
            </Item>
+           </View>
          );
       }
     }
   };
 
+  _isLiked = () => {
+    const { user, book} = this.props;
+    if(book && book.wishlist){
+      for(let i = 0; i < book.wishlist.length; i++){
+        if(book.wishlist[i].userId === user.id){
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
   render() {
+    console.log('[DetailView.js] render', this.props);
     const {loading, book } = this.props;
     if (loading || !book) {
       return (<Spinner color='blue'/>);
@@ -138,19 +154,19 @@ export default class DetailView extends Component {
         <Content style={styles.container}>
           <BookInfo
             {...book}
+            isLiked={this._isLiked()}
           />
 
           {
             this.renderYourReview()
           }
 
-          <RelatedBook
-            related={book.relateds}
-          />
-
           {
             this.renderReview()
           }
+          <RelatedBook
+            related={book.relateds}
+          />
         </Content>
       </Container>
     );
@@ -170,5 +186,11 @@ const styles = {
     borderTopWidth: 1,
     borderTopColor: AppColors.divider,
     paddingHorizontal: 16,
+  },
+  line: {
+    height: 1,
+    backgroundColor: AppColors.divider,
+    marginTop: 16,
+    marginBottom: 16
   }
 };

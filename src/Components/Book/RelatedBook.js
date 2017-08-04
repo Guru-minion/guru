@@ -18,36 +18,37 @@ const RelatedBook = (props) => {
 
   if(!related || related.length === 0){
     return (
-      <List>
-        <ListItem itemHeader first style={styles.item}>
-          <Text style={styles.related}>Related books</Text>
-        </ListItem>
-        <ListItem style={{ borderBottomColor: 'transparent'}}>
+        <ListItem style={styles.item}>
           <Body>
             <Text style={styles.related}>No related book found.</Text>
           </Body>
         </ListItem>
-      </List>
     )
   }
   return (
-    <FlatList
-      horizontal
-      data={related}
-      keyExtractor={(item) => item.id}
-      renderItem={({item}) => (
-        <ListItem key={item.id} style={{ borderBottomColor: 'transparent'}}>
-          <Thumbnail
-            style={styles.cover}
-            square
-            resizeMode="stretch"
-            size={80}
-            defaultSource={require('../../Assets/Images/holder.jpg')}
-            source={{ uri: getBiggerImage(item.imageLinks ? item.imageLinks.thumbnail : '')}}
-          />
-        </ListItem>
-      )}
-    />
+    <List style={styles.container}>
+      <ListItem itemHeader first style={styles.item}>
+        <Text style={styles.related}>Related books</Text>
+      </ListItem>
+      <FlatList
+        horizontal
+        indicatorStyle="black"
+        data={related}
+        keyExtractor={(item) => item.id}
+        renderItem={({item}) => (
+          <ListItem key={item.id} style={{ borderBottomColor: 'transparent'}}>
+            <Thumbnail
+              style={styles.cover}
+              square
+              resizeMode="stretch"
+              size={80}
+              defaultSource={require('../../Assets/Images/holder.jpg')}
+              source={{ uri: getBiggerImage(item.imageLinks ? item.imageLinks.thumbnail : '')}}
+            />
+          </ListItem>
+        )}
+      />
+    </List>
 
   );
 };
@@ -65,9 +66,12 @@ const styles = {
     borderBottomColor: 'transparent',
     borderTopWidth: 1,
     borderTopColor: AppColors.divider,
+    marginTop: 16,
   },
   related: {
-    fontWeight: 'bold',
+    fontWeight: '600',
+    textAlign: 'center',
+    color: AppColors.colorPrimaryText,
   },
   listRelated: {
     flex: 1,

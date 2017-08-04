@@ -23,8 +23,6 @@ const {width, height} = Dimensions.get('window');
 //style
 import { AppColors } from '@style/index';
 
-const IMAGE_URL = 'https://www.fahasa.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/v/e/veembangnoinho.jpg';
-
 export default class BookView extends Component {
 
   constructor(props) {
@@ -176,7 +174,8 @@ const styles = {
   title: {
     fontSize: 16,
     color: AppColors.colorPrimaryText,
-    fontWeight: '800',
+    fontFamily: 'Roboto_medium',
+    //fontWeight: '800',
   },
   author: {
     fontSize: 12,
